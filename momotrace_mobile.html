@@ -12,164 +12,130 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 :root{
-  --blue:#2563FF;--blue-d:#1A45CC;--blue-l:#EEF3FF;
-  --yellow:#F5A623;--yellow-l:#FFF8EC;
-  --green:#10B981;--green-l:#ECFDF5;
+  --blue:#2563EB;
+  --blue-l:#EEF3FF;
+  --yellow:#F5A623;
+  --yellow-l:#FFF8EC;
+  --green:#10B981;
+  --green-l:#ECFDF5;
   --red:#EF4444;
-  --dark:#111827;--mid:#374151;--muted:#9CA3AF;
-  --bg:#F3F4F8;--white:#fff;--border:#E5E7EB;
-  --sh:0 4px 24px rgba(0,0,0,.09);
+  --dark:#111827;
+  --mid:#374151;
+  --muted:#9CA3AF;
+  --bg:#F5F6FA;
+  --white:#fff;
+  --border:#E5E7EB;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-
-/* ── FULLSCREEN APP SHELL ── */
 html,body{
   width:100%;height:100%;overflow:hidden;
   font-family:'Noto Sans KR',sans-serif;
   background:var(--bg);color:var(--dark);
 }
-
-/* ── STATUS BAR (safe area) ── */
-.status-bar{
-  height:env(safe-area-inset-top,44px);
-  background:var(--white);
-  min-height:44px;
-  flex-shrink:0;
-}
+#app{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;}
 
 /* ── SCREENS ── */
-#app{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  display:flex;flex-direction:column;
-}
 .screen{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
-  display:none;flex-direction:column;
-  background:var(--bg);
-  animation:su .24s cubic-bezier(.4,0,.2,1);
-  z-index:1;
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  display:none;flex-direction:column;background:var(--white);
 }
-.screen.active{display:flex;z-index:2;}
-@keyframes su{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
-@keyframes sd{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
-.screen.back{animation:sd .24s cubic-bezier(.4,0,.2,1);}
+.screen.active{display:flex;}
+.screen.slide-in{animation:si .22s cubic-bezier(.4,0,.2,1);}
+.screen.slide-back{animation:sb .22s cubic-bezier(.4,0,.2,1);}
+@keyframes si{from{transform:translateX(100%)}to{transform:none}}
+@keyframes sb{from{transform:translateX(-30%);opacity:.6}to{transform:none;opacity:1}}
 
-/* ── SCROLL ── */
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
-.scroll::-webkit-scrollbar{display:none;}
+/* ── STATUS ── */
+.sb{
+  height:44px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;
+  font-size:13px;font-weight:600;color:var(--dark);
+  flex-shrink:0;background:var(--white);
+}
+.sb-center{width:90px;height:5px;background:#111;border-radius:3px;}
+.sb-icons{display:flex;gap:5px;align-items:center;}
+.sb-icons svg{width:14px;height:14px;fill:var(--dark);}
 
 /* ── TOP BAR ── */
 .tbar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px;background:var(--white);
-  border-bottom:1px solid var(--border);flex-shrink:0;
-  min-height:56px;
+  padding:8px 16px;background:var(--white);
+  border-bottom:1px solid var(--border);flex-shrink:0;min-height:52px;
 }
-.tbar-title{font-size:17px;font-weight:900;color:var(--dark);}
-.tbar-sub{font-size:12px;color:var(--muted);}
+.tbar-title{font-size:17px;font-weight:700;color:var(--dark);}
 .ib{
-  width:40px;height:40px;border-radius:12px;background:var(--bg);
+  width:38px;height:38px;border-radius:10px;background:transparent;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;border:none;transition:background .15s;flex-shrink:0;
+  cursor:pointer;border:none;
 }
-.ib:active{background:var(--blue-l);}
-.ib svg{width:20px;height:20px;fill:var(--mid);}
+.ib:active{background:var(--bg);}
+.ib svg{width:22px;height:22px;fill:var(--mid);}
+
+/* ── SCROLL ── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.scroll::-webkit-scrollbar{display:none;}
 
 /* ── NAV BAR ── */
 .nav{
   display:flex;justify-content:space-around;align-items:center;
   background:var(--white);border-top:1px solid var(--border);
   flex-shrink:0;
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  height:calc(60px + env(safe-area-inset-bottom,0px));
+  padding-bottom:max(env(safe-area-inset-bottom),8px);
+  padding-top:8px;
 }
 .ni{
   display:flex;flex-direction:column;align-items:center;gap:3px;
-  flex:1;padding:8px 0;cursor:pointer;border-radius:10px;
-  transition:background .12s;
+  flex:1;cursor:pointer;min-width:0;
 }
-.ni:active{background:var(--blue-l);}
 .ni svg{width:24px;height:24px;fill:var(--muted);}
 .ni span{font-size:10px;color:var(--muted);font-weight:500;}
 .ni.on svg{fill:var(--blue);}
 .ni.on span{color:var(--blue);}
-.fab{
-  width:56px;height:56px;background:var(--blue);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(37,99,255,.45);
-  border:none;cursor:pointer;transition:transform .12s;
-}
-.fab:active{transform:scale(.94);}
-.fab svg{width:26px;height:26px;fill:white;}
 
-/* ── ONBOARDING ── */
-#s-onboarding{background:var(--dark);}
-.ob-body{
+/* ────────────────────────────────
+   HOME — 메모보드
+──────────────────────────────── */
+#s-home .logo-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;background:var(--white);
+  border-bottom:1px solid var(--border);flex-shrink:0;
+}
+#s-home .logo{display:flex;align-items:center;gap:8px;}
+#s-home .logo-icon{
+  width:28px;height:28px;background:var(--blue);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+#s-home .logo-icon svg{width:16px;height:16px;fill:white;}
+#s-home .logo-text{font-size:16px;font-weight:900;color:var(--dark);}
+#s-home .logo-text span{color:var(--blue);}
+#s-home .logo-actions{display:flex;gap:4px;}
+
+/* 메모보드 — 메인 영역 */
+#s-home .memoboard{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:32px 28px;gap:0;
+  padding:20px;cursor:text;
 }
-.ob-logo{
-  width:80px;height:80px;background:var(--blue);border-radius:28px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:40px;margin-bottom:28px;
-  box-shadow:0 8px 32px rgba(37,99,255,.5);
+#s-home .memo-q{
+  font-size:22px;font-weight:900;color:#C4CAD4;
+  line-height:1.5;margin-bottom:8px;
 }
-.ob-title{font-size:28px;font-weight:900;color:var(--white);text-align:center;line-height:1.3;margin-bottom:12px;}
-.ob-title strong{color:#6FA8FF;}
-.ob-sub{font-size:14px;color:rgba(255,255,255,.55);text-align:center;line-height:1.75;margin-bottom:40px;}
-.task-card{
-  width:100%;background:rgba(255,255,255,.07);
-  border:1.5px solid rgba(255,255,255,.15);
-  border-radius:20px;padding:18px 20px;margin-bottom:12px;
-  display:flex;align-items:center;gap:16px;
-  cursor:pointer;transition:all .18s;
+#s-home .memo-q.has-text{color:var(--dark);}
+#s-home #home-ta{
+  flex:1;width:100%;border:none;outline:none;resize:none;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:16px;line-height:1.8;color:var(--dark);
+  background:transparent;min-height:120px;
 }
-.task-card:active{background:rgba(37,99,255,.25);border-color:var(--blue);}
-.task-num{
-  width:44px;height:44px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:900;flex-shrink:0;
+#s-home #home-ta::placeholder{color:#C4CAD4;}
+.ctx-chips-home{
+  display:none;flex-wrap:wrap;gap:6px;
+  padding:12px 20px;border-top:1px solid var(--border);
+  background:var(--white);flex-shrink:0;
 }
-.task-card:nth-child(1) .task-num{background:var(--blue);}
-.task-card:nth-child(2) .task-num{background:var(--yellow);}
-.tc-info .tc-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.5px;margin-bottom:4px;}
-.tc-info .tc-title{font-size:15px;font-weight:700;color:var(--white);}
-.tc-info .tc-desc{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px;}
-.tc-arrow{margin-left:auto;color:rgba(255,255,255,.3);font-size:20px;}
-
-/* ── TASK TRANSITION CARD ── */
-#s-task-bridge{background:var(--white);}
-.bridge-body{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:32px;gap:20px;
-}
-.bridge-badge{
-  padding:6px 16px;border-radius:20px;
-  font-size:12px;font-weight:700;letter-spacing:1px;
-}
-.bridge-icon{font-size:56px;}
-.bridge-title{font-size:24px;font-weight:900;color:var(--dark);text-align:center;line-height:1.4;}
-.bridge-desc{font-size:14px;color:var(--muted);text-align:center;line-height:1.75;}
-.bridge-task-desc{
-  width:100%;background:var(--bg);border-radius:16px;
-  padding:18px;border-left:4px solid var(--yellow);
-}
-.btd-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;}
-.btd-text{font-size:14px;color:var(--dark);line-height:1.75;font-weight:500;}
-
-/* ── SECTION LABEL ── */
-.sec-lbl{
-  font-size:11px;font-weight:700;color:var(--muted);
-  letter-spacing:1.5px;text-transform:uppercase;
-  padding:16px 20px 10px;
-}
-
-/* ── CHIPS ── */
+.ctx-chips-home.show{display:flex;}
 .chip{
   display:inline-flex;align-items:center;gap:4px;
-  border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;
+  border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;
 }
 .chip svg{width:11px;height:11px;}
 .chip-b{background:var(--blue-l);color:var(--blue);}
@@ -178,130 +144,161 @@ html,body{
 .chip-y svg{fill:var(--yellow);}
 .chip-g{background:var(--green-l);color:var(--green);}
 .chip-g svg{fill:var(--green);}
-@keyframes chipIn{from{opacity:0;transform:scale(.6) translateY(4px)}to{opacity:1;transform:none}}
-.chip-anim{animation:chipIn .28s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes chipIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.chip-anim{animation:chipIn .25s cubic-bezier(.34,1.56,.64,1) both;}
 
-/* ── METHOD CARDS ── */
-.method-list{display:flex;flex-direction:column;gap:10px;padding:0 16px 16px;}
+/* 홈 하단 툴바 */
+.home-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 24px;
+  border-top:1px solid var(--border);background:var(--white);flex-shrink:0;
+  padding-bottom:max(env(safe-area-inset-bottom),10px);
+}
+.htool-btn{
+  width:44px;height:44px;border-radius:50%;background:var(--bg);
+  border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.htool-btn:active{background:var(--blue-l);}
+.htool-btn svg{width:22px;height:22px;fill:var(--mid);}
+.htool-fab{
+  width:56px;height:56px;border-radius:50%;background:var(--blue);
+  border:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.4);
+}
+.htool-fab:active{transform:scale(.95);}
+.htool-fab svg{width:28px;height:28px;fill:white;}
+
+/* ────────────────────────────────
+   CHOOSE METHOD
+──────────────────────────────── */
+#s-choose .method-list{
+  display:flex;flex-direction:column;gap:10px;padding:16px;
+}
 .mc{
-  background:var(--white);border-radius:18px;padding:16px 18px;
-  display:flex;align-items:center;gap:16px;
-  border:2px solid var(--border);cursor:pointer;
-  transition:all .16s;min-height:72px;
+  background:var(--white);border-radius:16px;padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+  border:1.5px solid var(--border);cursor:pointer;min-height:68px;
+  transition:border-color .15s,background .15s;
 }
 .mc:active,.mc.sel{border-color:var(--blue);background:var(--blue-l);}
 .mc-icon{
-  width:48px;height:48px;border-radius:14px;
+  width:44px;height:44px;border-radius:13px;
   display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
 }
-.mc-info .mc-t{font-size:15px;font-weight:700;color:var(--dark);}
-.mc-info .mc-d{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.mc-t{font-size:15px;font-weight:700;color:var(--dark);}
+.mc-d{font-size:12px;color:var(--muted);margin-top:2px;}
 .mc.sel .mc-t{color:var(--blue);}
-.mc-badge{
+.rec-badge{
   margin-left:auto;font-size:10px;font-weight:700;
-  padding:3px 10px;border-radius:8px;background:var(--blue);color:white;flex-shrink:0;
+  padding:3px 9px;border-radius:8px;background:var(--blue);color:white;flex-shrink:0;
 }
 
-/* ── WRITE SCREEN ── */
-.write-box{
-  margin:16px;background:var(--white);border-radius:20px;
-  border:2px solid var(--border);padding:18px;
-  transition:border-color .2s,box-shadow .2s;
+/* ────────────────────────────────
+   WRITE
+──────────────────────────────── */
+#s-write{background:var(--white);}
+#s-write .write-inner{
+  flex:1;display:flex;flex-direction:column;padding:20px;
 }
-.write-box.on{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,255,.1);}
-.write-box textarea{
-  width:100%;border:none;outline:none;
-  font-family:'Noto Sans KR',sans-serif;font-size:16px;
-  line-height:1.8;color:var(--dark);resize:none;
-  background:transparent;min-height:140px;
+#s-write #wta{
+  flex:1;width:100%;border:none;outline:none;resize:none;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:16px;line-height:1.8;color:var(--dark);
+  background:transparent;min-height:160px;
 }
-.write-box textarea::placeholder{color:#C4CAD4;}
-.chips-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+#s-write #wta::placeholder{color:#C4CAD4;}
+.write-chips{
+  display:none;flex-wrap:wrap;gap:6px;
+  padding:12px 20px;border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.write-chips.show{display:flex;}
 .write-hint{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--muted);padding:0 20px 8px;
+  display:none;padding:6px 20px 10px;
+  font-size:12px;color:var(--muted);flex-shrink:0;
 }
-.write-hint svg{width:13px;height:13px;fill:var(--muted);}
-.btn-main{
-  display:block;width:calc(100% - 32px);margin:0 16px;
-  height:54px;background:var(--blue);color:white;
-  border:none;border-radius:16px;
-  font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;
-  cursor:pointer;transition:transform .12s;
+.write-hint.show{display:block;}
+.write-hint::before{content:"✦ ";color:var(--blue);}
+#s-write .write-save{
+  display:none;margin:0 16px 16px;
+  height:52px;background:var(--blue);color:white;
+  border:none;border-radius:14px;
+  font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;cursor:pointer;
 }
-.btn-main:active{transform:scale(.98);}
-.btn-ghost{
-  display:block;width:calc(100% - 32px);margin:10px 16px 0;
-  height:46px;background:transparent;color:var(--muted);
-  border:none;font-family:'Noto Sans KR',sans-serif;font-size:14px;cursor:pointer;
-}
+#s-write .write-save.show{display:block;}
+#s-write .write-save:active{transform:scale(.98);}
 
-/* ── CAMERA ── */
-#s-camera{background:#0d1117;}
-.cam-area{
+/* ────────────────────────────────
+   VOICE
+──────────────────────────────── */
+#s-voice{background:var(--white);}
+.voice-body{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:24px;
+  align-items:center;justify-content:center;gap:22px;padding:32px;
+}
+.rec-label{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--red);}
+.reddot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:bl 1s infinite;}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
+.wv{display:flex;align-items:center;gap:4px;height:48px;}
+.wb{width:4px;background:var(--blue);border-radius:2px;animation:wva 1.2s ease-in-out infinite;}
+.wb:nth-child(1){animation-delay:0s}.wb:nth-child(2){animation-delay:.1s}
+.wb:nth-child(3){animation-delay:.2s}.wb:nth-child(4){animation-delay:.3s}
+.wb:nth-child(5){animation-delay:.4s}.wb:nth-child(6){animation-delay:.3s}
+.wb:nth-child(7){animation-delay:.2s}.wb:nth-child(8){animation-delay:.1s}
+@keyframes wva{0%,100%{height:5px}50%{height:36px}}
+.vtimer{font-size:44px;font-weight:900;color:var(--dark);letter-spacing:-2px;}
+.vtrans{
+  background:var(--bg);border-radius:14px;padding:16px;width:100%;
+  font-size:14px;color:var(--mid);line-height:1.75;
+}
+.stop-btn{
+  width:68px;height:68px;border-radius:50%;background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px rgba(239,68,68,.4);border:none;cursor:pointer;
+}
+.stop-btn:active{transform:scale(.93);}
+.stop-btn svg{width:26px;height:26px;fill:white;}
+
+/* ────────────────────────────────
+   CAMERA
+──────────────────────────────── */
+#s-camera{background:#0a0f1a;}
+.cam-body{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:28px;
 }
 .cam-frame{
   width:260px;height:260px;border-radius:20px;
-  border:2px solid rgba(37,99,255,.6);
+  border:2px solid rgba(37,99,235,.6);
   background:rgba(255,255,255,.04);
   display:flex;align-items:center;justify-content:center;
   font-size:80px;position:relative;
 }
 .cc{position:absolute;width:22px;height:22px;border:3px solid var(--blue);}
-.cc.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;border-radius:4px 0 0 0;}
-.cc.tr{top:-2px;right:-2px;border-left:none;border-bottom:none;border-radius:0 4px 0 0;}
-.cc.bl{bottom:-2px;left:-2px;border-right:none;border-top:none;border-radius:0 0 0 4px;}
-.cc.br{bottom:-2px;right:-2px;border-left:none;border-top:none;border-radius:0 0 4px 0;}
-.cam-hint{color:rgba(255,255,255,.5);font-size:13px;}
+.cc.tl{top:-2px;left:-2px;border-right:none;border-bottom:none;border-radius:3px 0 0 0;}
+.cc.tr{top:-2px;right:-2px;border-left:none;border-bottom:none;border-radius:0 3px 0 0;}
+.cc.bl{bottom:-2px;left:-2px;border-right:none;border-top:none;border-radius:0 0 0 3px;}
+.cc.br{bottom:-2px;right:-2px;border-left:none;border-top:none;border-radius:0 0 3px 0;}
+.cam-hint{color:rgba(255,255,255,.45);font-size:13px;}
 .shutter{
   width:72px;height:72px;border-radius:50%;
-  background:white;border:5px solid rgba(255,255,255,.3);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  border:5px solid rgba(255,255,255,.35);background:white;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
 }
-.shutter:active{transform:scale(.93);}
-.shutter-inner{width:54px;height:54px;border-radius:50%;background:white;}
+.shutter:active{transform:scale(.92);}
+.shutter-i{width:54px;height:54px;border-radius:50%;background:white;}
 
-/* ── VOICE RECORD ── */
-#s-voice{background:white;}
-.voice-body{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:20px;padding:28px;
-}
-.rec-dot{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--red);}
-.reddot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:blink 1s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.wv{display:flex;align-items:center;gap:5px;height:54px;}
-.wb{width:5px;background:var(--blue);border-radius:3px;animation:wvanim 1.2s ease-in-out infinite;}
-.wb:nth-child(1){animation-delay:.0s}.wb:nth-child(2){animation-delay:.1s}
-.wb:nth-child(3){animation-delay:.2s}.wb:nth-child(4){animation-delay:.3s}
-.wb:nth-child(5){animation-delay:.4s}.wb:nth-child(6){animation-delay:.3s}
-.wb:nth-child(7){animation-delay:.2s}.wb:nth-child(8){animation-delay:.1s}
-@keyframes wvanim{0%,100%{height:6px}50%{height:42px}}
-.vtimer{font-size:44px;font-weight:900;color:var(--dark);letter-spacing:-2px;}
-.vtrans{
-  background:var(--bg);border-radius:16px;padding:16px;width:100%;
-  font-size:14px;color:var(--mid);line-height:1.75;min-height:80px;
-}
-.stop-btn{
-  width:72px;height:72px;border-radius:50%;background:var(--red);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(239,68,68,.45);border:none;cursor:pointer;
-}
-.stop-btn:active{transform:scale(.93);}
-.stop-btn svg{width:28px;height:28px;fill:white;}
-
-/* ── SAVED ── */
-#s-saved{background:white;}
+/* ────────────────────────────────
+   SAVED
+──────────────────────────────── */
+#s-saved{background:var(--white);}
 .saved-body{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:24px;gap:16px;
+  align-items:center;justify-content:center;padding:28px;gap:16px;
 }
-.saved-icon{
-  width:88px;height:88px;border-radius:50%;background:var(--green);
-  display:flex;align-items:center;justify-content:center;font-size:40px;
+.saved-circle{
+  width:84px;height:84px;border-radius:50%;background:var(--green);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
   animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes popIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
@@ -310,493 +307,512 @@ html,body{
 .saved-card{
   width:100%;background:var(--bg);border-radius:18px;padding:18px;
 }
-.sc-emoji{font-size:28px;margin-bottom:8px;}
-.sc-title{font-size:15px;font-weight:700;color:var(--dark);}
+.sc-emoji{font-size:26px;margin-bottom:8px;}
+.sc-title{font-size:15px;font-weight:700;color:var(--dark);line-height:1.5;}
 .sc-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.btn-blue{
+  width:100%;height:52px;background:var(--blue);color:white;
+  border:none;border-radius:14px;
+  font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;cursor:pointer;
+}
+.btn-blue:active{transform:scale(.98);}
+.btn-ghost{
+  background:none;border:none;font-family:'Noto Sans KR',sans-serif;
+  font-size:14px;color:var(--muted);cursor:pointer;padding:6px;
+}
 
-/* ── RECALL HOME ── */
-#s-recall .recall-wrap{padding:16px 16px 8px;}
-.rbox{
+/* ────────────────────────────────
+   RECALL HOME
+──────────────────────────────── */
+#s-recall{background:var(--white);}
+.recall-title{font-size:17px;font-weight:700;color:var(--dark);}
+/* search box */
+.search-box{
   display:flex;align-items:center;gap:10px;
-  background:var(--white);border:2px solid var(--border);
-  border-radius:18px;padding:14px 16px;
-  transition:border-color .2s,box-shadow .2s;
+  margin:14px 16px 0;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:14px;padding:12px 16px;
+  transition:border-color .15s;
 }
-.rbox.on{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,255,.1);}
-.rbox svg{width:20px;height:20px;fill:var(--muted);flex-shrink:0;}
-.rbox input{
-  flex:1;border:none;outline:none;
-  font-family:'Noto Sans KR',sans-serif;font-size:16px;
-  color:var(--dark);background:transparent;
+.search-box.on{border-color:var(--blue);}
+.search-box svg{width:18px;height:18px;fill:var(--muted);flex-shrink:0;}
+.search-box input{
+  flex:1;border:none;outline:none;background:transparent;
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;color:var(--dark);
 }
-.rbox input::placeholder{color:#C4CAD4;}
+.search-box input::placeholder{color:#C4CAD4;}
 .mic-btn{
-  width:40px;height:40px;border-radius:12px;background:var(--blue-l);
-  display:flex;align-items:center;justify-content:center;
-  border:none;cursor:pointer;flex-shrink:0;
+  width:36px;height:36px;border-radius:10px;background:var(--blue-l);
+  border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
 }
 .mic-btn:active{background:var(--blue);}
 .mic-btn:active svg{fill:white;}
-.mic-btn svg{width:18px;height:18px;fill:var(--blue);}
-
-.clue-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px 14px;}
+.mic-btn svg{width:16px;height:16px;fill:var(--blue);}
+/* clue filters */
+.clue-row{display:flex;gap:7px;overflow-x:auto;padding:12px 16px 14px;}
 .clue-row::-webkit-scrollbar{display:none;}
 .clue{
-  white-space:nowrap;padding:7px 16px;border-radius:20px;
-  font-size:13px;font-weight:600;cursor:pointer;
+  white-space:nowrap;padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;
   border:1.5px solid var(--border);color:var(--muted);background:var(--white);
-  transition:all .14s;flex-shrink:0;
 }
 .clue.on{background:var(--blue);color:white;border-color:var(--blue);}
-
 /* recent list */
+.sec-lbl{
+  font-size:11px;font-weight:700;color:var(--muted);
+  letter-spacing:1.5px;padding:4px 20px 10px;
+}
 .memo-row{
   display:flex;align-items:center;gap:12px;
-  padding:14px 20px;background:var(--white);
-  border-bottom:1px solid var(--border);cursor:pointer;min-height:64px;
+  padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;
 }
-.memo-row:active{background:var(--blue-l);}
+.memo-row:active{background:var(--bg);}
 .mr-icon{
-  width:44px;height:44px;border-radius:13px;background:var(--bg);
+  width:42px;height:42px;border-radius:12px;background:var(--bg);
   display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
 }
 .mr-info{flex:1;min-width:0;}
 .mr-t{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mr-m{font-size:12px;color:var(--muted);margin-top:2px;}
-.bk svg{width:18px;height:18px;}
 
-/* ── COUNTDOWN ── */
-#s-countdown{background:var(--dark);}
-.cd-body{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:20px;padding:32px;
+/* ────────────────────────────────
+   RECALL RESULT (검색 중 + 결과)
+──────────────────────────────── */
+#s-result{background:var(--white);}
+.result-hint{
+  font-size:12px;color:var(--muted);
+  padding:8px 20px 14px;display:flex;align-items:center;gap:4px;
 }
-.cd-label{color:rgba(255,255,255,.6);font-size:14px;font-weight:600;text-align:center;}
-.cd-ring{
-  width:130px;height:130px;position:relative;
-  display:flex;align-items:center;justify-content:center;
-}
-.cd-ring svg{position:absolute;top:0;left:0;width:130px;height:130px;transform:rotate(-90deg);}
-.cd-ring svg circle{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6;}
-.cd-ring svg .prog{
-  stroke:var(--blue);stroke-width:6;stroke-linecap:round;
-  stroke-dasharray:345;stroke-dashoffset:345;
-}
-.cd-num{font-size:52px;font-weight:900;color:white;position:relative;z-index:1;}
-.cd-step{
-  background:rgba(255,255,255,.07);border-radius:12px;
-  padding:10px 20px;font-size:13px;color:rgba(255,255,255,.7);font-weight:600;
-}
-
-/* ── AI RECS ── */
-#s-ai-recs{background:var(--bg);}
-.ai-hd{
-  padding:20px;
-  background:linear-gradient(135deg,#1e2d50 0%,#2563FF 100%);
-  color:white;flex-shrink:0;
-}
-.ai-hd .ahl{font-size:11px;font-weight:700;opacity:.6;letter-spacing:2px;margin-bottom:6px;}
-.ai-hd .aht{font-size:18px;font-weight:900;line-height:1.4;}
-.ai-hd .ahq{
-  background:rgba(255,255,255,.12);border-radius:12px;
-  padding:10px 14px;margin-top:12px;font-size:13px;
-  display:flex;align-items:center;gap:8px;opacity:.9;
-}
-.ai-hd .ahq svg{width:16px;height:16px;fill:rgba(255,255,255,.7);flex-shrink:0;}
-.ai-cards{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
-.ai-card{
-  background:var(--white);border-radius:18px;padding:16px;
-  border:2px solid var(--border);cursor:pointer;transition:all .18s;
-}
-.ai-card:active,.ai-card.sel{border-color:var(--blue);background:var(--blue-l);}
-.ai-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.ai-thumb{
-  width:48px;height:48px;border-radius:13px;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
-}
-.ai-ttl{font-size:14px;font-weight:700;color:var(--dark);}
-.ai-met{font-size:12px;color:var(--muted);margin-top:2px;}
-.ai-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.ai-bar-bg{flex:1;height:5px;border-radius:3px;background:var(--bg);overflow:hidden;}
-.ai-bar-fill{height:100%;border-radius:3px;background:var(--blue);transition:width .6s ease;}
-.ai-pct{font-size:12px;font-weight:700;color:var(--blue);}
-.ai-reason{font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:8px 12px;line-height:1.65;}
-.ai-card.sel .ai-ttl{color:var(--blue);}
-
-/* ── RECALL DETAIL ── */
-#s-detail{background:white;}
-.det-img{
-  width:100%;height:200px;
-  background:linear-gradient(135deg,#E0EAFF,#C8D8FF);
-  display:flex;align-items:center;justify-content:center;font-size:88px;
-  flex-shrink:0;
-}
-.det-body{padding:20px;}
-.success-badge{
-  display:flex;align-items:center;gap:8px;
-  background:var(--green-l);border-radius:12px;padding:12px 16px;margin-bottom:16px;
-}
-.success-badge svg{width:20px;height:20px;fill:var(--green);}
-.success-badge span{font-size:14px;font-weight:700;color:var(--green);}
-.det-title{font-size:22px;font-weight:900;color:var(--dark);margin-bottom:12px;}
-.det-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
-.det-sec{margin-bottom:20px;}
-.ds-lbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;}
-.ds-txt{font-size:15px;color:var(--mid);line-height:1.8;}
-.ctx-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mid);margin-bottom:8px;}
-.ctx-item span:first-child{font-size:18px;}
-.action-row{display:flex;gap:10px;margin-top:8px;}
-.btn-sec{
-  flex:1;height:52px;background:var(--bg);color:var(--mid);
-  border:1.5px solid var(--border);border-radius:16px;
-  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;cursor:pointer;
-}
-.btn-sec:active{background:var(--blue-l);}
-
-/* ── FAVORITES ── */
-#s-favorites{background:var(--bg);}
-.fav-hint{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--muted);padding:10px 20px 12px;
-}
-.fav-hint svg{width:14px;height:14px;fill:var(--muted);}
-.fav-list{padding:0 16px;display:flex;flex-direction:column;gap:8px;}
-.fav-card{
-  background:var(--white);border-radius:16px;padding:16px;
+.result-hint svg{width:12px;height:12px;fill:var(--muted);}
+.res-card{
+  margin:0 16px 10px;border-radius:16px;padding:14px 16px;
   display:flex;align-items:center;gap:12px;
-  border:1.5px solid var(--border);cursor:pointer;
-  min-height:68px;
+  border:1.5px solid var(--border);cursor:pointer;background:var(--white);
+  transition:all .15s;
 }
-.fav-card:active{box-shadow:0 4px 20px rgba(0,0,0,.1);}
-.fav-card.drag-over{border-color:var(--blue);background:var(--blue-l);}
-.drag-h{font-size:20px;color:#D1D5DB;cursor:grab;flex-shrink:0;padding:0 2px;}
-.fav-thumb{
-  width:44px;height:44px;border-radius:13px;background:var(--bg);
+.res-card:active{transform:scale(.99);}
+.res-card.top{
+  border-color:var(--yellow);background:var(--yellow-l);
+}
+.res-thumb{
+  width:44px;height:44px;border-radius:12px;background:var(--bg);
   display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
 }
-.fav-info{flex:1;min-width:0;}
-.fav-t{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.fav-m{font-size:12px;color:var(--muted);margin-top:2px;}
-.fav-bk svg{width:18px;height:18px;fill:var(--yellow);}
-.new-tag{font-size:10px;font-weight:700;background:var(--blue);color:white;padding:2px 8px;border-radius:6px;flex-shrink:0;}
+.res-card.top .res-thumb{background:rgba(245,166,35,.15);}
+.res-info{flex:1;min-width:0;}
+.res-t{font-size:14px;font-weight:700;color:var(--dark);}
+.res-m{font-size:12px;color:var(--muted);margin-top:3px;}
+.pct{
+  font-size:12px;font-weight:800;padding:3px 9px;border-radius:8px;flex-shrink:0;
+}
+.pct-y{background:var(--yellow);color:white;}
+.pct-g{background:var(--muted);color:white;}
 
-/* ── VOICE RECALL ── */
-#s-voice-recall{background:white;}
+/* ────────────────────────────────
+   SUCCESS BOTTOM SHEET
+──────────────────────────────── */
+.overlay{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.5);z-index:50;
+  display:none;align-items:flex-end;
+}
+.overlay.active{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.success-sheet{
+  width:100%;background:var(--white);
+  border-radius:24px 24px 0 0;padding:20px;
+  padding-bottom:max(env(safe-area-inset-bottom),20px);
+  animation:sheetUp .3s cubic-bezier(.34,1.2,.64,1);
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.ss-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.ss-badge{
+  display:flex;align-items:center;gap:8px;
+  background:var(--yellow-l);border-radius:12px;padding:10px 14px;margin-bottom:16px;
+}
+.ss-badge-circle{
+  width:36px;height:36px;border-radius:50%;background:var(--yellow);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ss-badge-circle svg{width:18px;height:18px;fill:white;}
+.ss-badge-text{font-size:15px;font-weight:900;color:var(--dark);}
+.ss-preview{
+  background:var(--bg);border-radius:16px;overflow:hidden;margin-bottom:16px;
+}
+.ss-img{
+  width:100%;height:140px;background:linear-gradient(135deg,#C8D8FF,#E0EAFF);
+  display:flex;align-items:center;justify-content:center;font-size:64px;
+}
+.ss-info{padding:14px;}
+.ss-title{font-size:15px;font-weight:700;color:var(--dark);}
+.ss-meta{font-size:12px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:6px;}
+.ss-meta svg{width:12px;height:12px;fill:var(--muted);}
+.btn-confirm{
+  width:100%;height:52px;background:var(--blue);color:white;
+  border:none;border-radius:14px;
+  font-family:'Noto Sans KR',sans-serif;font-size:16px;font-weight:700;cursor:pointer;
+}
+.btn-confirm:active{transform:scale(.98);}
+
+/* ─────────────────────────────
+<!-- ══ WEEKLY REPORT ══ -->
+<div class="screen" id="s-report" style="background:#F5F6FA;">
+  <div class="sb" style="background:#F5F6FA;"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="tbar" style="background:#F5F6FA;border-bottom:none;">
+    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="tbar-title">주간 리포트</div>
+    <div style="font-size:12px;color:var(--muted);">6월 1주</div>
+  </div>
+  <div class="scroll" style="padding:0 16px 24px;">
+    <div style="background:linear-gradient(135deg,#1e3a5f,var(--blue));border-radius:20px;padding:20px;margin-bottom:14px;color:white;">
+      <div style="font-size:11px;font-weight:700;opacity:.7;letter-spacing:1.5px;margin-bottom:14px;">이번 주 기억 요약</div>
+      <div style="display:flex;justify-content:space-around;text-align:center;margin-bottom:18px;">
+        <div><div style="font-size:28px;font-weight:900;">38</div><div style="font-size:11px;opacity:.7;margin-top:2px;">저장</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+        <div><div style="font-size:28px;font-weight:900;">12</div><div style="font-size:11px;opacity:.7;margin-top:2px;">회상 성공</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+        <div><div style="font-size:28px;font-weight:900;">3.2<span style="font-size:14px;">초</span></div><div style="font-size:11px;opacity:.7;margin-top:2px;">평균 탐색</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:5px;height:52px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.3);border-radius:3px 3px 0 0;height:20px;"></div><div style="font-size:10px;opacity:.6;">월</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.3);border-radius:3px 3px 0 0;height:34px;"></div><div style="font-size:10px;opacity:.6;">화</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.3);border-radius:3px 3px 0 0;height:26px;"></div><div style="font-size:10px;opacity:.6;">수</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.3);border-radius:3px 3px 0 0;height:42px;"></div><div style="font-size:10px;opacity:.6;">목</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.3);border-radius:3px 3px 0 0;height:30px;"></div><div style="font-size:10px;opacity:.6;">금</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:white;border-radius:3px 3px 0 0;height:38px;"></div><div style="font-size:10px;font-weight:700;">오늘</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><div style="width:100%;background:rgba(255,255,255,.15);border-radius:3px 3px 0 0;height:6px;"></div><div style="font-size:10px;opacity:.4;">일</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:10px;">시간대별 메모</div>
+
+    <div style="background:white;border-radius:16px;padding:16px;margin-bottom:10px;border:1.5px solid #FEE2E2;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">⚡</span><span style="font-size:14px;font-weight:900;color:#EF4444;">지금 필요한 것</span></div>
+        <span style="font-size:11px;font-weight:700;background:#FEE2E2;color:#EF4444;padding:3px 10px;border-radius:20px;">3개</span>
+      </div>
+      <div onclick="toast('미팅 자료 열기')" style="display:flex;align-items:center;gap:12px;padding:10px;background:#FFF5F5;border-radius:12px;margin-bottom:8px;cursor:pointer;">
+        <div style="width:36px;height:36px;border-radius:10px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📋</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--dark);">미팅 자료 — 클라이언트 제안서</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">오늘 오후 3시</div></div>
+      </div>
+      <div onclick="toast('연락처 열기')" style="display:flex;align-items:center;gap:12px;padding:10px;background:#FFF5F5;border-radius:12px;cursor:pointer;">
+        <div style="width:36px;height:36px;border-radius:10px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">📞</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--dark);">팀장님 새 번호</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">오늘 저장</div></div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:16px;padding:16px;margin-bottom:10px;border:1.5px solid #FEF3C7;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">📅</span><span style="font-size:14px;font-weight:900;color:var(--yellow);">곧 필요한 것</span></div>
+        <span style="font-size:11px;font-weight:700;background:#FEF3C7;color:var(--yellow);padding:3px 10px;border-radius:20px;">8개</span>
+      </div>
+      <div onclick="toast('카페 레퍼런스 열기')" style="display:flex;align-items:center;gap:12px;padding:10px;background:#FFFBEB;border-radius:12px;cursor:pointer;">
+        <div style="width:36px;height:36px;border-radius:10px;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">☕</div>
+        <div><div style="font-size:13px;font-weight:700;color:var(--dark);">카페 인테리어 레퍼런스</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">다음 주 인테리어 미팅</div></div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:16px;padding:16px;margin-bottom:10px;border:1.5px solid var(--blue-l);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:16px;">🗄️</span><span style="font-size:14px;font-weight:900;color:var(--blue);">언젠가 (아카이브)</span></div>
+        <span style="font-size:11px;font-weight:700;background:var(--blue-l);color:var(--blue);padding:3px 10px;border-radius:20px;">27개</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;">오래된 메모가 안전하게 보관돼 있어요. 검색·맥락으로 언제든 꺼낼 수 있어요.</div>
+    </div>
+
+    <div style="background:#FFF8EC;border-radius:16px;padding:16px;border:1.5px solid #FEE3A1;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-size:16px;">🗑️</span><span style="font-size:14px;font-weight:900;color:var(--yellow);">자동 폐기 제안</span></div>
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:14px;">90일 이상 열람하지 않은 메모 5개가 있어요. 삭제할까요?</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="toast('5개가 휴지통으로 이동됐어요')" style="flex:1;height:44px;background:var(--yellow);color:white;border:none;border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">제안 수락</button>
+        <button onclick="toast('계속 보관할게요')" style="flex:1;height:44px;background:white;color:var(--mid);border:1.5px solid var(--border);border-radius:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">계속 보관</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+───
+   VOICE RECALL
+──────────────────────────────── */
+#s-voice-recall{background:var(--white);}
 .vr-body{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:22px;padding:32px;
 }
 .vr-orb{
-  width:128px;height:128px;border-radius:50%;
-  background:radial-gradient(circle,rgba(37,99,255,.12) 0%,rgba(37,99,255,.04) 70%);
-  border:2px solid rgba(37,99,255,.25);
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.1) 0%,rgba(37,99,235,.03) 70%);
+  border:2px solid rgba(37,99,235,.2);
   display:flex;align-items:center;justify-content:center;
   animation:orbp 2s ease-in-out infinite;
 }
-@keyframes orbp{0%,100%{box-shadow:0 0 0 0 rgba(37,99,255,.25)}50%{box-shadow:0 0 0 24px rgba(37,99,255,0)}}
-.vr-orb svg{width:48px;height:48px;fill:var(--blue);}
+@keyframes orbp{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.2)}50%{box-shadow:0 0 0 20px rgba(37,99,235,0)}}
+.vr-orb svg{width:44px;height:44px;fill:var(--blue);}
 .vr-prompt{font-size:17px;font-weight:700;color:var(--dark);text-align:center;line-height:1.6;}
 .vr-hint{font-size:13px;color:var(--muted);text-align:center;}
-.btn-cancel{
-  padding:14px 32px;border-radius:20px;background:var(--bg);
-  border:none;font-family:'Noto Sans KR',sans-serif;
-  font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;
+
+/* ────────────────────────────────
+   COUNTDOWN
+──────────────────────────────── */
+#s-countdown{background:#0d1117;}
+.cd-body{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;
+}
+.cd-label{color:rgba(255,255,255,.6);font-size:14px;font-weight:600;}
+.cd-ring{
+  width:128px;height:128px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.cd-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.cd-ring svg .bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:6;}
+.cd-ring svg .prog{
+  fill:none;stroke:var(--blue);stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:340;stroke-dashoffset:340;
+  transition:stroke-dashoffset .05s linear;
+}
+.cd-num{font-size:54px;font-weight:900;color:white;}
+.cd-step{
+  background:rgba(255,255,255,.07);border-radius:12px;
+  padding:10px 20px;font-size:13px;color:rgba(255,255,255,.65);font-weight:600;
 }
 
-/* ── BOTTOM SHEET ── */
+/* ────────────────────────────────
+   FAVORITES
+──────────────────────────────── */
+#s-favorites{background:var(--bg);}
+.fav-hint{
+  font-size:12px;color:var(--muted);
+  padding:8px 20px 12px;display:flex;align-items:center;gap:5px;
+}
+.fav-hint svg{width:13px;height:13px;fill:var(--muted);}
+.fav-list{padding:0 16px;display:flex;flex-direction:column;gap:8px;}
+.fav-card{
+  background:var(--white);border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;gap:10px;
+  border:1px solid var(--border);cursor:pointer;
+}
+.fav-card:active{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.drag-h{font-size:18px;color:#D1D5DB;cursor:grab;flex-shrink:0;}
+.fav-thumb{
+  width:42px;height:42px;border-radius:12px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.fav-info{flex:1;min-width:0;}
+.fav-t{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fav-m{font-size:12px;color:var(--muted);margin-top:2px;}
+.fav-bk svg{width:17px;height:17px;fill:var(--yellow);}
+.new-tag{font-size:10px;font-weight:700;background:var(--blue);color:white;padding:2px 8px;border-radius:6px;flex-shrink:0;}
+
+/* ────────────────────────────────
+   MY MENU
+──────────────────────────────── */
+#s-my{background:var(--bg);}
+.my-profile{
+  background:var(--white);padding:20px;
+  display:flex;align-items:center;gap:16px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.my-avatar{
+  width:52px;height:52px;border-radius:16px;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;color:white;flex-shrink:0;
+}
+.my-name{font-size:17px;font-weight:900;color:var(--dark);}
+.my-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.my-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;background:var(--white);
+  border-bottom:1px solid var(--border);cursor:pointer;
+}
+.my-item:active{background:var(--bg);}
+.my-item svg{width:20px;height:20px;fill:var(--blue);flex-shrink:0;}
+.my-item-label{flex:1;font-size:14px;font-weight:600;color:var(--dark);}
+.my-item-badge{font-size:11px;font-weight:700;background:var(--blue-l);color:var(--blue);padding:2px 8px;border-radius:8px;}
+.my-item-arrow{color:var(--muted);font-size:18px;}
+.my-section-lbl{
+  font-size:11px;font-weight:700;color:var(--muted);
+  letter-spacing:1.5px;padding:16px 20px 8px;
+}
+
+/* ────────────────────────────────
+   QUICK ADD SHEET
+──────────────────────────────── */
 .sheet-ov{
-  position:fixed;top:0;left:0;right:0;bottom:0;
+  position:absolute;top:0;left:0;right:0;bottom:0;
   background:rgba(0,0,0,.45);z-index:100;
   display:none;align-items:flex-end;
 }
-.sheet-ov.active{display:flex;animation:fadeIn .2s ease;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet-ov.active{display:flex;animation:fadeIn .18s ease;}
 .sheet{
-  width:100%;background:white;border-radius:24px 24px 0 0;
-  padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
-  animation:shup .28s cubic-bezier(.34,1.3,.64,1);
+  width:100%;background:var(--white);
+  border-radius:24px 24px 0 0;padding:20px;
+  padding-bottom:max(env(safe-area-inset-bottom),20px);
+  animation:sheetUp .26s cubic-bezier(.34,1.2,.64,1);
 }
-@keyframes shup{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}
 .sh-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
-.sh-title{font-size:17px;font-weight:900;color:var(--dark);margin-bottom:16px;}
+.sh-greeting{font-size:18px;font-weight:900;color:var(--dark);margin-bottom:4px;}
+.sh-sub{font-size:13px;color:var(--muted);margin-bottom:18px;}
 .sh-opts{display:flex;gap:10px;}
 .sopt{
-  flex:1;height:80px;border-radius:16px;background:var(--bg);
-  border:1.5px solid var(--border);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:6px;
-  font-size:13px;font-weight:700;color:var(--mid);cursor:pointer;
+  flex:1;height:76px;border-radius:16px;background:var(--bg);
+  border:1.5px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  font-size:12px;font-weight:700;color:var(--mid);cursor:pointer;
 }
 .sopt:active{background:var(--blue-l);border-color:var(--blue);color:var(--blue);}
-.sopt svg{width:24px;height:24px;fill:var(--mid);}
+.sopt svg{width:22px;height:22px;fill:var(--mid);}
 .sopt:active svg{fill:var(--blue);}
 
-/* ── TOAST ── */
-.toast-wrap{
-  position:fixed;bottom:calc(72px + env(safe-area-inset-bottom,0px));
-  left:50%;transform:translateX(-50%) translateY(16px);
-  z-index:300;pointer-events:none;
-  transition:all .28s cubic-bezier(.34,1.56,.64,1);opacity:0;
-  white-space:nowrap;
+/* ────────────────────────────────
+   TOAST
+──────────────────────────────── */
+.toast{
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:rgba(17,24,39,.9);color:white;
+  padding:10px 20px;border-radius:20px;
+  font-size:13px;font-weight:600;white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:all .24s cubic-bezier(.34,1.56,.64,1);z-index:300;
 }
-.toast-wrap.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast-inner{
-  background:rgba(17,24,39,.92);color:white;
-  padding:11px 22px;border-radius:22px;
-  font-size:13px;font-weight:600;
-  backdrop-filter:blur(10px);
-}
-
-/* ── DIRECT RESULT ── */
-#s-direct-result{background:var(--bg);}
-.dr-hero{
-  margin:16px;border-radius:20px;
-  background:linear-gradient(135deg,var(--yellow) 0%,#FFD166 100%);
-  padding:20px;
-}
-.dr-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.3);border-radius:20px;
-  padding:4px 14px;font-size:12px;font-weight:700;color:white;margin-bottom:12px;
-}
-.dr-ttl{font-size:20px;font-weight:900;color:white;line-height:1.4;}
-.dr-sub{font-size:13px;color:rgba(255,255,255,.8);margin-top:4px;}
-
-/* ── PROGRESS INDICATOR ── */
-.progress-bar{
-  display:flex;align-items:center;gap:6px;
-  padding:10px 20px 0;flex-shrink:0;
-  background:var(--white);
-}
-.prog-step{
-  height:4px;border-radius:2px;flex:1;background:var(--border);
-  transition:background .3s;
-}
-.prog-step.done{background:var(--blue);}
-.prog-step.active{background:var(--blue);opacity:.5;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ══════════════════════════════
-     ONBOARDING
-══════════════════════════════ -->
-<div class="screen" id="s-onboarding" style="display:none!important;">
-  <div class="ob-body">
-    <div class="ob-logo">🙂</div>
-    <div class="ob-title">momo<strong>trace</strong></div>
-    <div class="ob-sub">저장한 순간이,<br>다시 찾는 단서가 됩니다</div>
-    <div class="task-card" onclick="startTask(1)">
-      <div class="task-num" style="color:white;">1</div>
-      <div class="tc-info">
-        <div class="tc-label">TASK 1</div>
-        <div class="tc-title">저장 기록하기</div>
-        <div class="tc-desc">5가지 수단 중 선택해 메모 저장</div>
-      </div>
-      <div class="tc-arrow">›</div>
-    </div>
-    <div class="task-card" onclick="startTask(2)">
-      <div class="task-num" style="color:white;background:var(--yellow);">2</div>
-      <div class="tc-info">
-        <div class="tc-label">TASK 2</div>
-        <div class="tc-title">3초 재탐색하기</div>
-        <div class="tc-desc">흐릿한 단서만으로 바로 찾기</div>
-      </div>
-      <div class="tc-arrow">›</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     TASK BRIDGE (전환 카드)
-══════════════════════════════ -->
-<div class="screen" id="s-task-bridge">
-  <div class="bridge-body">
-    <div class="bridge-badge" style="background:var(--yellow-l);color:var(--yellow);">TASK 2 시작</div>
-    <div class="bridge-icon">🔍</div>
-    <div class="bridge-title">이번엔 저장한 메모를<br>찾아볼게요</div>
-    <div class="bridge-desc">정확한 키워드 없어도 괜찮아요.<br>흐릿한 단서만으로 3초 안에 찾아드려요.</div>
-    <div class="bridge-task-desc">
-      <div class="btd-label">태스크 지시문</div>
-      <div class="btd-text">"며칠 전 성수동 카페에서 봤던 인테리어 사진을 찾아보세요"</div>
-    </div>
-    <button class="btn-main" style="width:100%;margin:0;" onclick="go('s-recall')">시작하기 →</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     HOME (TASK 1)
-══════════════════════════════ -->
+<!-- ══ HOME — 메모보드 ══ -->
 <div class="screen active" id="s-home">
-  <div class="progress-bar">
-    <div class="prog-step active" id="p1"></div>
-    <div class="prog-step" id="p2"></div>
-    <div class="prog-step" id="p3"></div>
+  <div class="sb">
+    <span>9:41</span>
+    <div class="sb-center"></div>
+    <div class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
   </div>
-  <div class="tbar">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div style="width:30px;height:30px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;">🙂</div>
-      <span class="tbar-title">momotrace</span>
+  <div class="logo-bar">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      </div>
+      <div class="logo-text">momo <span>trace</span></div>
     </div>
-    <button class="ib" onclick="go('s-recall')">
-      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    </button>
+    <div class="logo-actions">
+      <div class="ib" onclick="go('s-recall')">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </div>
+      <div class="ib" onclick="openDrawer()">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </div>
+    </div>
   </div>
-  <div class="scroll">
-    <!-- Hero -->
-    <div style="margin:16px;border-radius:20px;background:linear-gradient(135deg,#2563FF,#4F8EFF);padding:22px;color:white;">
-      <div style="font-size:22px;font-weight:900;line-height:1.35;">오늘, 무엇을<br>기억할까요?</div>
-      <div style="font-size:13px;opacity:.7;margin-top:6px;">저장 방식을 선택하세요</div>
-    </div>
-    <!-- 5 methods grid -->
-    <div style="padding:0 16px 8px;font-size:13px;font-weight:700;color:var(--mid);">저장 수단 선택</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px;">
-      <div style="grid-column:1/-1;">
-        <div class="mc" onclick="go('s-choose')">
-          <div class="mc-icon" style="background:#EEF3FF;">📝</div>
-          <div class="mc-info"><div class="mc-t">텍스트 메모</div><div class="mc-d">직접 타이핑 · 가장 빠른 입력</div></div>
-          <div class="mc-badge">추천</div>
-        </div>
-      </div>
-      <div class="mc" style="flex-direction:column;align-items:flex-start;gap:8px;padding:16px;" onclick="go('s-camera')">
-        <div class="mc-icon" style="background:#ECFDF5;width:40px;height:40px;font-size:18px;">📷</div>
-        <div><div class="mc-t" style="font-size:14px;">카메라</div><div class="mc-d">OCR 자동 인식</div></div>
-      </div>
-      <div class="mc" style="flex-direction:column;align-items:flex-start;gap:8px;padding:16px;" onclick="go('s-voice')">
-        <div class="mc-icon" style="background:#FFF8EC;width:40px;height:40px;font-size:18px;">🎙️</div>
-        <div><div class="mc-t" style="font-size:14px;">보이스</div><div class="mc-d">이동 중 최적</div></div>
-      </div>
-      <div class="mc" style="flex-direction:column;align-items:flex-start;gap:8px;padding:16px;" onclick="showToast('공유 저장 — 다른 앱에서 가져오기')">
-        <div class="mc-icon" style="background:#F3E8FF;width:40px;height:40px;font-size:18px;">🔗</div>
-        <div><div class="mc-t" style="font-size:14px;">공유</div><div class="mc-d">URL·링크 저장</div></div>
-      </div>
-      <div class="mc" style="flex-direction:column;align-items:flex-start;gap:8px;padding:16px;" onclick="showToast('링크 저장 — 브라우저에서 직접')">
-        <div class="mc-icon" style="background:#FFF1F2;width:40px;height:40px;font-size:18px;">📎</div>
-        <div><div class="mc-t" style="font-size:14px;">링크</div><div class="mc-d">URL 직접 저장</div></div>
-      </div>
-    </div>
-    <!-- Recent -->
-    <div class="sec-lbl">최근 기억</div>
-    <div style="background:var(--white);">
-      <div class="memo-row" onclick="showToast('카페 인테리어 조명 메모')">
-        <div class="mr-icon">☕</div>
-        <div class="mr-info"><div class="mr-t">카페 인테리어 조명이 진짜 예뻤다</div><div class="mr-m">📍 성수동 · 3일 전</div></div>
-        <div class="bk"><svg viewBox="0 0 24 24" style="fill:var(--yellow)"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
-      </div>
-      <div class="memo-row" onclick="showToast('발표 자료 레퍼런스')">
-        <div class="mr-icon">📊</div>
-        <div class="mr-info"><div class="mr-t">발표 자료 레퍼런스 UX 케이스</div><div class="mr-m">🏢 회사 · 1주 전</div></div>
-        <div class="bk"><svg viewBox="0 0 24 24" style="fill:var(--yellow)"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
-      </div>
-    </div>
-    <div style="height:16px;"></div>
+
+  <!-- 메모보드 -->
+  <div class="memoboard" onclick="document.getElementById('home-ta').focus()">
+    <div class="memo-q" id="memo-q">오늘, 무엇을<br>기억할까요?</div>
+    <div style="font-size:13px;color:#C4CAD4;margin-bottom:16px;">› 화면 아무 곳이나 탭하면 바로 시작</div>
+    <textarea id="home-ta" placeholder="여기에 적어보세요…" oninput="onHomeInput()" onfocus="onHomeFocus()" onblur="onHomeBlur()"></textarea>
   </div>
-  <div class="nav">
-    <div class="ni on"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></div>
-    <div class="ni" onclick="go('s-recall')"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>기억찾기</span></div>
-    <div><button class="fab" onclick="showSheet()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
-    <div class="ni" onclick="go('s-favorites')"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>즐겨찾기</span></div>
-    <div class="ni"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></div>
+
+  <!-- 맥락칩 (타이핑 시 등장) -->
+  <div class="ctx-chips-home" id="home-chips">
+    <div class="chip chip-b chip-anim" style="animation-delay:0s">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동
+    </div>
+    <div class="chip chip-y chip-anim" style="animation-delay:.1s">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24
+    </div>
+    <div class="chip chip-g chip-anim" style="animation-delay:.2s">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>직접 입력
+    </div>
+    <div style="font-size:11.5px;color:var(--muted);align-self:center;margin-left:2px;">✦ 칩은 작성 중 시스템이 자동 생성합니다</div>
+  </div>
+
+  <!-- 하단 툴바 -->
+  <div class="home-toolbar">
+    <div class="htool-btn" onclick="go('s-choose')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+    </div>
+    <div class="htool-fab" onclick="showSheet()">
+      <svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/></svg>
+    </div>
+    <div class="htool-btn" onclick="showSheet()">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     CHOOSE METHOD
-══════════════════════════════ -->
+<!-- ══ CHOOSE METHOD ══ -->
 <div class="screen" id="s-choose">
-  <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step active"></div><div class="prog-step"></div></div>
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg></div></div>
   <div class="tbar">
     <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="tbar-title">저장 방식 선택</div>
-    <div style="width:40px;"></div>
+    <div style="width:38px;"></div>
   </div>
   <div class="scroll">
-    <div style="padding:12px 16px 14px;font-size:13px;color:var(--muted);">어떤 방식으로 기록할까요?</div>
+    <div style="padding:12px 16px 10px;font-size:13px;color:var(--muted);">어떤 방식으로 기록할까요?</div>
     <div class="method-list">
       <div class="mc" onclick="selMethod(this,'s-write')">
         <div class="mc-icon" style="background:#EEF3FF;">📝</div>
-        <div class="mc-info"><div class="mc-t">텍스트 메모</div><div class="mc-d">직접 타이핑 · 가장 빠른 입력</div></div>
-        <div class="mc-badge">추천</div>
+        <div><div class="mc-t">텍스트 메모</div><div class="mc-d">직접 타이핑 · 가장 빠른 입력</div></div>
+        <div class="rec-badge">추천</div>
       </div>
       <div class="mc" onclick="selMethod(this,'s-camera')">
         <div class="mc-icon" style="background:#ECFDF5;">📷</div>
-        <div class="mc-info"><div class="mc-t">카메라 캡처</div><div class="mc-d">사진 찍기 · OCR 자동 인식</div></div>
+        <div><div class="mc-t">카메라 캡처</div><div class="mc-d">사진 찍기 · OCR 자동 인식</div></div>
       </div>
       <div class="mc" onclick="selMethod(this,'s-voice')">
         <div class="mc-icon" style="background:#FFF8EC;">🎙️</div>
-        <div class="mc-info"><div class="mc-t">보이스 메모</div><div class="mc-d">말하기 · 이동 중 최적</div></div>
+        <div><div class="mc-t">보이스 메모</div><div class="mc-d">말하기 · 이동 중 최적</div></div>
       </div>
-      <div class="mc" onclick="selMethod(this,'s-home');showToast('공유 저장 — 다른 앱에서 가져오기')">
+      <div class="mc" onclick="selMethod(this,'s-home');toast('공유 저장 — 다른 앱에서 가져오기')">
         <div class="mc-icon" style="background:#F3E8FF;">🔗</div>
-        <div class="mc-info"><div class="mc-t">공유 저장</div><div class="mc-d">다른 앱에서 공유 · URL 자동 저장</div></div>
+        <div><div class="mc-t">공유 저장</div><div class="mc-d">다른 앱에서 공유 · URL 자동 저장</div></div>
       </div>
-      <div class="mc" onclick="selMethod(this,'s-home');showToast('링크 저장 — 브라우저 URL 직접')">
+      <div class="mc" onclick="selMethod(this,'s-home');toast('링크 저장 — 브라우저 URL 직접')">
         <div class="mc-icon" style="background:#FFF1F2;">📎</div>
-        <div class="mc-info"><div class="mc-t">링크 저장</div><div class="mc-d">브라우저 URL 직접 가져오기</div></div>
+        <div><div class="mc-t">링크 저장</div><div class="mc-d">브라우저 URL 직접 가져오기</div></div>
       </div>
     </div>
-    <div style="height:16px;"></div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     WRITE (텍스트)
-══════════════════════════════ -->
-<div class="screen" id="s-write">
-  <div class="progress-bar"><div class="prog-step done"></div><div class="prog-step done"></div><div class="prog-step active"></div></div>
-  <div class="tbar">
-    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="tbar-title">텍스트 메모</div>
-    <button class="ib" style="background:var(--blue);" onclick="go('s-saved')"><svg viewBox="0 0 24 24" style="fill:white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></button>
-  </div>
-  <div class="scroll">
-    <div style="height:8px;"></div>
-    <div class="write-box" id="wb">
-      <textarea id="wta" rows="7" placeholder="여기에 바로 적어보세요…&#10;&#10;예) 성수동 카페 인테리어 조명이 예뻤다. 거실에도 따라하면 좋을 듯" oninput="onWrite()" onfocus="document.getElementById('wb').classList.add('on')" onblur="document.getElementById('wb').classList.remove('on')"></textarea>
-      <div class="chips-row" id="wchips" style="display:none;">
-        <div class="chip chip-b chip-anim" style="animation-delay:0s"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
-        <div class="chip chip-y chip-anim" style="animation-delay:.1s"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
-        <div class="chip chip-g chip-anim" style="animation-delay:.2s"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>직접 입력</div>
-      </div>
-    </div>
-    <div class="write-hint" id="whint" style="display:none;">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      위치·시간 단서가 자동으로 기록됩니다
-    </div>
-    <div style="height:12px;"></div>
-    <button class="btn-main" id="save-btn" style="display:none;" onclick="go('s-saved')">저장하기</button>
     <div style="height:20px;"></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     CAMERA
-══════════════════════════════ -->
-<div class="screen" id="s-camera" style="background:#0d1117;">
-  <div class="tbar" style="background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.1);">
-    <button class="ib" style="background:rgba(255,255,255,.1);" onclick="back()"><svg viewBox="0 0 24 24" style="fill:white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="tbar-title" style="color:white;">카메라 캡처</div>
-    <div style="width:40px;"></div>
-  </div>
-  <div class="cam-area">
-    <div style="color:rgba(255,255,255,.4);font-size:12px;font-weight:600;letter-spacing:2px;">CAMERA PREVIEW</div>
-    <div class="cam-frame">☕<div class="cc tl"></div><div class="cc tr"></div><div class="cc bl"></div><div class="cc br"></div></div>
-    <div class="cam-hint">프레임에 맞춰 촬영하세요</div>
-    <div class="shutter" onclick="go('s-saved')"><div class="shutter-inner"></div></div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     VOICE RECORD
-══════════════════════════════ -->
-<div class="screen" id="s-voice" style="background:white;">
+<!-- ══ WRITE ══ -->
+<div class="screen" id="s-write">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg></div></div>
   <div class="tbar">
     <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="tbar-title">보이스 메모</div>
-    <div style="width:40px;"></div>
+    <div class="tbar-title" style="font-size:15px;color:var(--dark);">메모 작성</div>
+    <button class="ib" style="background:transparent;" onclick="go('s-saved')">
+      <span style="color:var(--blue);font-size:15px;font-weight:700;">완료</span>
+    </button>
+  </div>
+  <div class="write-inner">
+    <textarea id="wta" placeholder="강남 카페 인테리어 조명이 진짜 예뻤다. 우리 집 거실에도 따라하면 좋을 듯" oninput="onWrite()" onfocus="onWFocus()" onblur="onWBlur()"></textarea>
+  </div>
+  <div class="write-chips" id="wchips">
+    <div class="chip chip-b chip-anim" style="animation-delay:0s"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
+    <div class="chip chip-y chip-anim" style="animation-delay:.1s"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
+    <div class="chip chip-g chip-anim" style="animation-delay:.2s"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>직접 입력</div>
+  </div>
+  <div class="write-hint" id="whint">칩은 작성 중 시스템이 자동 생성합니다</div>
+  <button class="write-save" id="wsave" onclick="go('s-saved')">저장하기</button>
+</div>
+
+<!-- ══ VOICE ══ -->
+<div class="screen" id="s-voice">
+  <div class="sb" style="background:var(--white);"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24" style="fill:var(--dark)"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg></div></div>
+  <div class="tbar">
+    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="tbar-title">보이스 기록 중</div>
+    <div style="width:38px;"></div>
   </div>
   <div class="voice-body">
-    <div class="rec-dot"><div class="reddot"></div>듣고 있어요</div>
+    <div class="rec-label"><div class="reddot"></div>듣고 있어요</div>
     <div class="wv"><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div></div>
     <div class="vtimer" id="vt">0:08</div>
     <div class="vtrans">"내일 회의 끝나고 김대리한테 발표 자료 공유하기…"</div>
@@ -805,408 +821,739 @@ html,body{
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     SAVED
-══════════════════════════════ -->
-<div class="screen" id="s-saved" style="background:white;">
-  <div class="tbar" style="border:none;">
-    <div style="width:40px;"></div>
-    <div style="font-size:14px;font-weight:700;color:var(--muted);">저장 완료</div>
-    <div style="width:40px;"></div>
+<!-- ══ CAMERA ══ -->
+<div class="screen" id="s-camera">
+  <div class="sb" style="background:rgba(0,0,0,.5);"><span style="color:white;">9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24" style="fill:white"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg></div></div>
+  <div class="tbar" style="background:rgba(0,0,0,.5);border-bottom:none;">
+    <button class="ib" style="background:rgba(255,255,255,.1);" onclick="back()"><svg viewBox="0 0 24 24" style="fill:white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="tbar-title" style="color:white;">카메라 캡처</div>
+    <div style="width:38px;"></div>
   </div>
+  <div class="cam-body">
+    <div style="color:rgba(255,255,255,.4);font-size:12px;letter-spacing:2px;">CAMERA PREVIEW</div>
+    <div class="cam-frame">☕<div class="cc tl"></div><div class="cc tr"></div><div class="cc bl"></div><div class="cc br"></div></div>
+    <div class="cam-hint">프레임에 맞춰 촬영하세요</div>
+    <div class="shutter" onclick="go('s-saved')"><div class="shutter-i"></div></div>
+  </div>
+</div>
+
+<!-- ══ SAVED ══ -->
+<div class="screen" id="s-saved">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
   <div class="saved-body">
-    <div class="saved-icon">✓</div>
+    <div class="saved-circle">✓</div>
     <div class="saved-title">저장됐어요!</div>
     <div class="saved-sub">맥락 단서가 자동으로 붙었어요.<br>흐릿한 기억으로도 다시 찾을 수 있어요.</div>
     <div class="saved-card">
       <div class="sc-emoji">☕</div>
-      <div class="sc-title">카페 인테리어 조명이 진짜 예뻤다. 거실에도 따라하면 좋을 듯</div>
+      <div class="sc-title">카페 인테리어 조명이 진짜 예뻤다. 우리 집 거실에도 따라하면 좋을 듯</div>
       <div class="sc-chips">
         <div class="chip chip-b chip-anim" style="animation-delay:0s"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
         <div class="chip chip-y chip-anim" style="animation-delay:.12s"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
         <div class="chip chip-g chip-anim" style="animation-delay:.24s"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>저장됨</div>
       </div>
     </div>
-    <button class="btn-main" style="width:100%;margin:0;" onclick="go('s-task-bridge')">다음 태스크로 →</button>
+    <button class="btn-blue" onclick="go('s-recall');showJustSaved()">기억 찾기에서 확인하기</button>
     <button class="btn-ghost" onclick="go('s-home')">홈으로 돌아가기</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     RECALL HOME (TASK 2)
-══════════════════════════════ -->
-<div class="screen" id="s-recall">
+<!-- ══ RECALL HOME ══ -->
+<div class="screen" id="s-recall" style="background:var(--white);">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
   <div class="tbar">
-    <div class="tbar-title">기억 찾기</div>
-    <div class="tbar-sub">흐릿한 단서로도 OK</div>
+    <div class="recall-title">기억 찾기</div>
+    <div style="font-size:12px;color:var(--muted);">흐릿한 단서로도 OK</div>
   </div>
   <div class="scroll">
-    <div style="height:12px;"></div>
-    <div class="recall-wrap">
-      <div class="rbox" id="rbox" onclick="document.getElementById('ri').focus()">
-        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input id="ri" type="text" placeholder="성수동 카페에서 봤던 그거"
-          oninput="onRecall(this.value)"
-          onfocus="document.getElementById('rbox').classList.add('on')"
-          onblur="document.getElementById('rbox').classList.remove('on')">
-        <button class="mic-btn" onclick="go('s-voice-recall');event.stopPropagation()">
-          <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+    <div class="search-box" id="sbox" onclick="document.getElementById('si').focus()">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input id="si" type="text" placeholder="성수동 카페에서 봤던 그거"
+        oninput="onRecall(this.value)"
+        onfocus="document.getElementById('sbox').classList.add('on')"
+        onblur="document.getElementById('sbox').classList.remove('on')">
+      <button class="mic-btn" onclick="go('s-voice-recall');event.stopPropagation()">
+        <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+      </button>
+    </div>
+    <!-- 방금 저장 배너 -->
+    <div id="just-saved-banner" style="display:none;margin:0 16px 12px;">
+      <div style="background:#ECFDF5;border:1.5px solid var(--green);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:white;font-size:18px;font-weight:700;">✓</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:3px;">방금 저장됐어요!</div>
+          <div style="font-size:13px;color:var(--dark);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="just-saved-text"></div>
+          <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;" id="just-saved-chips"></div>
+        </div>
+        <button onclick="document.getElementById('just-saved-banner').style.display='none'" style="width:28px;height:28px;border-radius:50%;background:rgba(16,185,129,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--green);"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
     </div>
+
     <div class="clue-row">
-      <div class="clue on">전체</div>
       <div class="clue" onclick="toggleClue(this)">📍 위치</div>
       <div class="clue" onclick="toggleClue(this)">🕐 시간</div>
       <div class="clue" onclick="toggleClue(this)">🖼 이미지</div>
       <div class="clue" onclick="toggleClue(this)">⭐ 즐겨찾기</div>
     </div>
     <div class="sec-lbl">최근 기억</div>
-    <div style="background:var(--white);">
-      <div class="memo-row" onclick="showToast('카페 인테리어 조명 메모')">
-        <div class="mr-icon">☕</div>
-        <div class="mr-info"><div class="mr-t">카페 인테리어 조명이 진짜 예뻤다</div><div class="mr-m">📍 성수동 · 3일 전</div></div>
-      </div>
-      <div class="memo-row" onclick="showToast('발표 자료 레퍼런스')">
-        <div class="mr-icon">📊</div>
-        <div class="mr-info"><div class="mr-t">발표 자료 레퍼런스 UX 케이스</div><div class="mr-m">🏢 회사 · 1주 전</div></div>
-      </div>
-      <div class="memo-row" onclick="showToast('생일 선물 아이디어')">
-        <div class="mr-icon">🎁</div>
-        <div class="mr-info"><div class="mr-t">생일 선물 아이디어 — 무선이어폰</div><div class="mr-m">🏠 집 · 2주 전</div></div>
-      </div>
+    <div class="memo-row" onclick="toast('카페 인테리어 조명')">
+      <div class="mr-icon">☕</div>
+      <div class="mr-info"><div class="mr-t">카페 인테리어 조명이 진짜 예뻤다</div><div class="mr-m">📍 성수동 · 3일 전</div></div>
+    </div>
+    <div class="memo-row" onclick="toast('발표 자료 레퍼런스')">
+      <div class="mr-icon">📊</div>
+      <div class="mr-info"><div class="mr-t">발표 자료 레퍼런스 UX 케이스</div><div class="mr-m">🏢 회사 · 1주 전</div></div>
+    </div>
+    <div class="memo-row" onclick="toast('생일 선물 아이디어')">
+      <div class="mr-icon">🎁</div>
+      <div class="mr-info"><div class="mr-t">생일 선물 아이디어 — 무선이어폰</div><div class="mr-m">🏠 집 · 2주 전</div></div>
     </div>
     <div style="height:16px;"></div>
   </div>
   <div class="nav">
     <div class="ni" onclick="go('s-home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></div>
     <div class="ni on"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>기억찾기</span></div>
-    <div><button class="fab" onclick="showSheet()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
+    <div><button style="width:52px;height:52px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,99,235,.4);cursor:pointer;" onclick="showSheet()"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
     <div class="ni" onclick="go('s-favorites')"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>즐겨찾기</span></div>
-    <div class="ni"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></div>
+    <div class="ni" onclick="openDrawer()"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     VOICE RECALL
-══════════════════════════════ -->
-<div class="screen" id="s-voice-recall" style="background:white;">
+<!-- ══ RECALL RESULT ══ -->
+<div class="screen" id="s-result" style="background:var(--white);">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="tbar">
+    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="recall-title">기억 찾기</div>
+    <div style="width:38px;"></div>
+  </div>
+  <!-- 검색어 표시 -->
+  <div style="padding:12px 16px 0;">
+    <div style="background:var(--bg);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:8px;">
+      <svg style="width:16px;height:16px;fill:var(--muted);" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span style="font-size:14px;color:var(--dark);font-weight:500;">성수동 카페에서 봤던 그거</span>
+    </div>
+  </div>
+  <div class="result-hint">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    위치·시간 단서로 찾는 중…
+  </div>
+  <div class="scroll" style="padding-top:4px;">
+    <!-- 상위 결과 (노란 하이라이트) -->
+    <div class="res-card top" onclick="showSuccess()">
+      <div class="res-thumb">☕</div>
+      <div class="res-info">
+        <div class="res-t">카페 인테리어 조명</div>
+        <div class="res-m">성수동 · 3일 전 · 오후 3:24</div>
+      </div>
+      <div class="pct pct-y">98%</div>
+    </div>
+    <div class="res-card" onclick="toast('카페 메뉴판 사진')">
+      <div class="res-thumb">📸</div>
+      <div class="res-info">
+        <div class="res-t">카페 메뉴판 사진</div>
+        <div class="res-m">성수동 · 3일 전</div>
+      </div>
+      <div class="pct pct-g">62%</div>
+    </div>
+    <div class="res-card" onclick="toast('성수 팝업 스토어 노트')">
+      <div class="res-thumb">🏛️</div>
+      <div class="res-info">
+        <div class="res-t">성수 팝업 스토어 노트</div>
+        <div class="res-m">성수동 · 1주 전</div>
+      </div>
+      <div class="pct pct-g">38%</div>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+
+  <!-- SUCCESS BOTTOM SHEET -->
+  <div class="overlay" id="success-ov" onclick="closeSuccess()">
+    <div class="success-sheet" onclick="event.stopPropagation()">
+      <div class="ss-handle"></div>
+      <div class="ss-badge">
+        <div class="ss-badge-circle">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <div class="ss-badge-text">3초 만에 찾았어요!</div>
+      </div>
+      <div class="ss-preview">
+        <div class="ss-img">☕</div>
+        <div class="ss-info">
+          <div class="ss-title">카페 인테리어 조명</div>
+          <div class="ss-meta">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            성수동 · 3일 전
+          </div>
+        </div>
+      </div>
+      <button class="btn-confirm" onclick="go('s-detail')">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DETAIL ══ -->
+<div class="screen" id="s-detail" style="background:var(--white);">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="tbar">
+    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="tbar-title">메모 상세</div>
+    <button class="ib" onclick="toast('공유 메뉴')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></button>
+  </div>
+  <div class="scroll">
+    <div style="width:100%;height:200px;background:linear-gradient(135deg,#C8D8FF,#E0EAFF);display:flex;align-items:center;justify-content:center;font-size:80px;">☕</div>
+    <div style="padding:20px;">
+      <div style="display:flex;align-items:center;gap:6px;background:var(--green-l);border-radius:10px;padding:10px 14px;margin-bottom:16px;">
+        <svg style="width:18px;height:18px;fill:var(--green);" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span style="font-size:14px;font-weight:700;color:var(--green);">🎉 3초 만에 찾았어요!</span>
+      </div>
+      <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:12px;">카페 인테리어 조명이 진짜 예뻤다</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;">
+        <div class="chip chip-b"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
+        <div class="chip chip-y"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
+        <div class="chip chip-g"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>3일 전</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;">MEMO</div>
+      <div style="font-size:15px;color:var(--mid);line-height:1.8;margin-bottom:20px;">카페 인테리어 조명이 진짜 예뻤다. 우리 집 거실에도 따라하면 좋을 듯 — 따뜻한 색온도 2700K 펜던트 조명.</div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:12px;">맥락 단서</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mid);"><span style="font-size:18px;">📍</span>성수동 카페 골목</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mid);"><span style="font-size:18px;">🕐</span>3일 전 오후 3:24</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mid);"><span style="font-size:18px;">📱</span>직접 입력</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-blue" style="flex:1;margin:0;height:50px;" onclick="toast('복사됐어요!')">복사</button>
+        <button style="flex:1;height:50px;background:var(--bg);border:1.5px solid var(--border);border-radius:14px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;color:var(--mid);cursor:pointer;" onclick="go('s-favorites')">즐겨찾기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VOICE DONE — AI 변환 확인 ══ -->
+<div class="screen" id="s-voice-done" style="background:var(--white);">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="tbar">
+    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="tbar-title">보이스 메모 저장</div>
+    <div style="width:38px;"></div>
+  </div>
+  <div class="scroll" style="padding:16px;">
+
+    <!-- AI 변환 결과 -->
+    <div style="background:var(--blue-l);border-radius:16px;padding:16px;margin-bottom:14px;border:1.5px solid rgba(37,99,235,.15);">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+        <div style="width:20px;height:20px;border-radius:6px;background:var(--blue);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:white;"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;">AI 변환 완료</span>
+      </div>
+      <div style="font-size:14px;color:var(--dark);line-height:1.8;background:white;border-radius:10px;padding:12px;">
+        "내일 회의 끝나고 김대리한테 발표 자료 공유하기"
+      </div>
+    </div>
+
+    <!-- AI 키워드 정리 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:10px;">🤖 AI가 정리한 키워드</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="background:#EEF3FF;color:var(--blue);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;">회의</div>
+        <div style="background:#EEF3FF;color:var(--blue);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;">김대리</div>
+        <div style="background:#EEF3FF;color:var(--blue);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;">발표 자료</div>
+        <div style="background:#FFF8EC;color:var(--yellow);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;">내일</div>
+      </div>
+    </div>
+
+    <!-- 맥락 단서 -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:10px;">자동 기록된 단서</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="chip chip-b chip-anim"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
+        <div class="chip chip-y chip-anim" style="animation-delay:.1s;"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
+        <div class="chip chip-g chip-anim" style="animation-delay:.2s;"><svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>보이스</div>
+      </div>
+    </div>
+
+    <!-- 공유 + 저장 버튼 -->
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <button onclick="nativeShare()" style="flex:1;height:50px;background:var(--bg);border:1.5px solid var(--border);border-radius:14px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--mid);"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        공유
+      </button>
+      <button onclick="go('s-saved');showJustSaved()" style="flex:2;height:50px;background:var(--blue);border:none;border-radius:14px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;color:white;cursor:pointer;">
+        이렇게 저장하기
+      </button>
+    </div>
+    <button class="btn-ghost" onclick="back()">다시 녹음하기</button>
+
+  </div>
+</div>
+
+
+<div class="screen" id="s-voice-recall" style="background:var(--white);">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
   <div class="tbar">
     <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="tbar-title">음성으로 찾기</div>
-    <div style="width:40px;"></div>
+    <div style="width:38px;"></div>
   </div>
   <div class="vr-body">
     <div class="vr-orb"><svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg></div>
     <div class="vr-prompt">"성수동 카페에서 봤던<br>그 인테리어 사진"</div>
     <div class="vr-hint">말씀하신 단서로 찾는 중…</div>
-    <button class="btn-main" style="width:100%;margin:0;" onclick="startCountdown()">이 단서로 찾기</button>
-    <button class="btn-cancel" onclick="back()">취소</button>
+    <button class="btn-blue" style="width:100%;margin:0;" onclick="startCD()">이 단서로 찾기</button>
+    <button class="btn-ghost" onclick="back()">취소</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     COUNTDOWN (3초)
-══════════════════════════════ -->
-<div class="screen" id="s-countdown" style="background:var(--dark);">
+<!-- ══ COUNTDOWN ══ -->
+<div class="screen" id="s-countdown">
+  <div class="sb" style="background:transparent;"><span style="color:rgba(255,255,255,.7);">9:41</span><div class="sb-center" style="background:rgba(255,255,255,.3);"></div><div style="width:30px;"></div></div>
   <div class="cd-body">
-    <div class="cd-label" id="cd-label">흐릿한 단서로 찾는 중…</div>
+    <div class="cd-label" id="cd-lbl">흐릿한 단서로 찾는 중…</div>
     <div class="cd-ring">
-      <svg viewBox="0 0 130 130">
-        <circle cx="65" cy="65" r="55"/>
-        <circle class="prog" cx="65" cy="65" r="55" id="cd-prog"/>
+      <svg width="128" height="128" viewBox="0 0 128 128">
+        <circle class="bg" cx="64" cy="64" r="54"/>
+        <circle class="prog" cx="64" cy="64" r="54" id="cdp"/>
       </svg>
-      <div class="cd-num" id="cd-num">3</div>
+      <div class="cd-num" id="cdn">3</div>
     </div>
-    <div class="cd-step" id="cd-step">📍 위치·시간 분석 중</div>
+    <div class="cd-step" id="cds">📍 위치·시간 분석 중</div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     AI 3 RECS
-══════════════════════════════ -->
-<div class="screen" id="s-ai-recs">
-  <div class="ai-hd">
-    <div class="ahl">AI 추천</div>
-    <div class="aht">이 메모를 찾으시나요?</div>
-    <div class="ahq">
-      <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
-      "성수동 카페에서 봤던 그 인테리어"
-    </div>
-  </div>
-  <div class="scroll">
-    <div class="ai-cards">
-      <div class="ai-card" onclick="selAI(this)">
-        <div class="ai-top">
-          <div class="ai-thumb">☕</div>
-          <div><div class="ai-ttl">카페 인테리어 조명이 진짜 예뻤다</div><div class="ai-met">📍 성수동 · 3일 전 · 오후 3:24</div></div>
-        </div>
-        <div class="ai-bar"><div class="ai-bar-bg"><div class="ai-bar-fill" style="width:96%"></div></div><div class="ai-pct">96%</div></div>
-        <div class="ai-reason">위치(성수동)와 저장 시간대 일치 · 카페 관련 키워드 포함</div>
-      </div>
-      <div class="ai-card" onclick="selAI(this)">
-        <div class="ai-top">
-          <div class="ai-thumb">📸</div>
-          <div><div class="ai-ttl">카페 메뉴판 사진</div><div class="ai-met">📍 성수동 · 3일 전</div></div>
-        </div>
-        <div class="ai-bar"><div class="ai-bar-bg"><div class="ai-bar-fill" style="width:62%"></div></div><div class="ai-pct">62%</div></div>
-        <div class="ai-reason">같은 날 성수동에서 저장한 이미지</div>
-      </div>
-      <div class="ai-card" onclick="selAI(this)">
-        <div class="ai-top">
-          <div class="ai-thumb">🏛️</div>
-          <div><div class="ai-ttl">성수 팝업 스토어 노트</div><div class="ai-met">📍 성수동 · 1주 전</div></div>
-        </div>
-        <div class="ai-bar"><div class="ai-bar-bg"><div class="ai-bar-fill" style="width:38%"></div></div><div class="ai-pct">38%</div></div>
-        <div class="ai-reason">성수동 위치 일치 · 공간 관련 내용</div>
-      </div>
-    </div>
-    <div style="padding:0 16px 20px;">
-      <button class="btn-main" style="width:100%;margin:0;" onclick="go('s-detail')">선택한 메모 열기</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     DETAIL + SUCCESS
-══════════════════════════════ -->
-<div class="screen" id="s-detail" style="background:white;">
-  <div class="tbar">
-    <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="tbar-title">메모 상세</div>
-    <button class="ib" onclick="showToast('공유 메뉴가 열렸어요')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></button>
-  </div>
-  <div class="scroll">
-    <div class="det-img">☕</div>
-    <div class="det-body">
-      <div class="success-badge">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>🎉 3초 만에 찾았어요!</span>
-      </div>
-      <div class="det-title">카페 인테리어 조명이 진짜 예뻤다</div>
-      <div class="det-chips">
-        <div class="chip chip-b"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>성수동</div>
-        <div class="chip chip-y"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>오후 3:24</div>
-        <div class="chip chip-g"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>3일 전</div>
-      </div>
-      <div class="det-sec">
-        <div class="ds-lbl">MEMO</div>
-        <div class="ds-txt">카페 인테리어 조명이 진짜 예뻤다. 우리 집 거실에도 따라하면 좋을 듯 — 따뜻한 색온도 2700K 펜던트 조명.</div>
-      </div>
-      <div class="det-sec">
-        <div class="ds-lbl">맥락 단서</div>
-        <div class="ctx-item"><span>📍</span>성수동 카페 골목 (저장 시점 위치)</div>
-        <div class="ctx-item"><span>🕐</span>3일 전 오후 3:24</div>
-        <div class="ctx-item"><span>📱</span>직접 입력 (momotrace)</div>
-      </div>
-      <div class="action-row">
-        <button class="btn-main" style="flex:1;margin:0;height:52px;" onclick="showToast('클립보드에 복사됐어요')">복사</button>
-        <button class="btn-sec" onclick="go('s-favorites')">즐겨찾기 →</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     FAVORITES (드래그 정렬)
-══════════════════════════════ -->
-<div class="screen" id="s-favorites">
-  <div class="tbar">
+<!-- ══ FAVORITES ══ -->
+<div class="screen" id="s-favorites" style="background:#F5F6FA;">
+  <div class="sb" style="background:#F5F6FA;"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="tbar" style="background:#F5F6FA;border-bottom:none;">
     <button class="ib" onclick="back()"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="tbar-title">즐겨찾기 <span style="font-size:14px;color:var(--blue);font-weight:700;">12</span></div>
-    <div style="width:40px;"></div>
+    <div style="width:38px;"></div>
   </div>
-  <div class="fav-hint">
-    <svg viewBox="0 0 24 24"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
-    ⠿ 드래그로 순서 변경 · 자주 찾으면 자동 상단 정렬
+  <div style="font-size:12px;color:var(--muted);padding:0 20px 10px;display:flex;align-items:center;gap:5px;">
+    <span>⠿ 드래그로 순서 변경</span>
+    <span style="color:#D1D5DB;">·</span>
+    <span>자주 찾으면 자동 상단 정렬</span>
   </div>
   <div class="scroll">
-    <div class="fav-list" id="fav-list">
-      <div class="fav-card" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drop(event)">
-        <span class="drag-h">⠿</span><div class="fav-thumb">☕</div>
-        <div class="fav-info"><div class="fav-t">카페 인테리어 레퍼런스</div><div class="fav-m">성수동 · 3일 전</div></div>
-        <div class="new-tag">NEW</div>
-        <div class="fav-bk"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
+    <div style="padding:0 16px;display:flex;flex-direction:column;gap:10px;" id="fav-list">
+
+      <!-- 카드 1: 파란 배경 -->
+      <div style="background:white;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid #E5E7EB;cursor:pointer;" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drp(event)">
+        <span style="font-size:18px;color:#D1D5DB;cursor:grab;flex-shrink:0;">⠿</span>
+        <div style="width:48px;height:48px;border-radius:12px;background:#EEF3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#9DBFFF;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">카페 인테리어 레퍼...</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:2px;">성수동 · 3일 전</div>
+        </div>
+        <div style="font-size:10px;font-weight:700;background:var(--blue);color:white;padding:2px 8px;border-radius:6px;flex-shrink:0;margin-right:6px;">NEW</div>
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#F5A623;flex-shrink:0;"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
       </div>
-      <div class="fav-card" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drop(event)">
-        <span class="drag-h">⠿</span><div class="fav-thumb">📊</div>
-        <div class="fav-info"><div class="fav-t">발표 자료 레퍼런스 UX</div><div class="fav-m">회사 · 1주 전</div></div>
-        <div class="fav-bk"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
+
+      <!-- 카드 2: 링크 아이콘 -->
+      <div style="background:white;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid #E5E7EB;cursor:pointer;" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drp(event)">
+        <span style="font-size:18px;color:#D1D5DB;cursor:grab;flex-shrink:0;">⠿</span>
+        <div style="width:48px;height:48px;border-radius:12px;background:#FFF8EC;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#F5A623;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">발표 자료 레퍼런스 ...</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:2px;">회사 · 1주 전</div>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#F5A623;flex-shrink:0;"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
       </div>
-      <div class="fav-card" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drop(event)">
-        <span class="drag-h">⠿</span><div class="fav-thumb">🎁</div>
-        <div class="fav-info"><div class="fav-t">생일 선물 아이디어</div><div class="fav-m">집 · 2주 전</div></div>
-        <div class="fav-bk"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
+
+      <!-- 카드 3: 텍스트 아이콘 -->
+      <div style="background:white;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid #E5E7EB;cursor:pointer;" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drp(event)">
+        <span style="font-size:18px;color:#D1D5DB;cursor:grab;flex-shrink:0;">⠿</span>
+        <div style="width:48px;height:48px;border-radius:12px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#9CA3AF;"><path d="M3 18h12v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">생일 선물 아이디어 ...</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:2px;">집 · 2주 전</div>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#F5A623;flex-shrink:0;"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
       </div>
-      <div class="fav-card" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drop(event)">
-        <span class="drag-h">⠿</span><div class="fav-thumb">🏛️</div>
-        <div class="fav-info"><div class="fav-t">전시회 작품 사진 DDP</div><div class="fav-m">DDP · 3주 전</div></div>
-        <div class="fav-bk"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
+
+      <!-- 카드 4: 이미지 아이콘 -->
+      <div style="background:white;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid #E5E7EB;cursor:pointer;" draggable="true" ondragstart="ds(event)" ondragend="de(event)" ondragover="dov(event)" ondrop="drp(event)">
+        <span style="font-size:18px;color:#D1D5DB;cursor:grab;flex-shrink:0;">⠿</span>
+        <div style="width:48px;height:48px;border-radius:12px;background:#EEF3FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#9DBFFF;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">전시회 작품 사진</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:2px;">DDP · 3주 전</div>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#F5A623;flex-shrink:0;"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
       </div>
+
     </div>
     <div style="height:16px;"></div>
+  </div>
+    <div class="home-toolbar">
+    <div class="htool-btn" onclick="go('s-choose')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+    </div>
+    <div class="htool-fab" onclick="showSheet()">
+      <svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/></svg>
+    </div>
+    <div class="htool-btn" onclick="showSheet()">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MY MENU — 오른쪽 드로어 ══ -->
+<div id="drawer-overlay" onclick="closeDrawer()" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:200;display:none;animation:fadeIn .2s ease;"></div>
+<div id="drawer-panel" style="position:fixed;top:0;right:-320px;bottom:0;width:280px;background:var(--white);z-index:201;display:flex;flex-direction:column;box-shadow:-6px 0 32px rgba(0,0,0,.18);transition:right .26s cubic-bezier(.4,0,.2,1);overflow-y:auto;">
+  <!-- X 버튼 -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;flex-shrink:0;">
+    <button onclick="closeDrawer()" style="width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+      <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--mid);"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div style="width:36px;"></div>
+  </div>
+  <!-- 프로필 -->
+  <div style="display:flex;align-items:center;gap:12px;padding:4px 20px 18px;flex-shrink:0;">
+    <div style="width:46px;height:46px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:white;flex-shrink:0;">차</div>
+    <div>
+      <div style="font-size:15px;font-weight:900;color:var(--dark);">차민서</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px;">저장 124 · 회상 38회 / 이번 달</div>
+    </div>
+  </div>
+  <div style="height:1px;background:var(--border);margin:0 16px 4px;"></div>
+  <!-- MY -->
+  <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;padding:12px 20px 6px;">MY</div>
+  <div onclick="closeDrawer()" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">내 메모</span>
+  </div>
+  <div onclick="closeDrawer();go('s-favorites')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">즐겨찾기</span>
+  </div>
+  <div onclick="closeDrawer();toast('오늘의 기억함')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">오늘의 기억함</span>
+  </div>
+  <div onclick="closeDrawer();go('s-report')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">주간 리포트</span>
+  </div>
+  <div onclick="closeDrawer();toast('휴지통')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">휴지통</span>
+  </div>
+  <div style="height:1px;background:var(--border);margin:4px 16px;"></div>
+  <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;padding:12px 20px 6px;">MORE</div>
+  <div onclick="closeDrawer();toast('설정')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94zM12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">설정</span>
+  </div>
+  <div onclick="closeDrawer();toast('도움말')" style="display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;" ontouchstart="this.style.background='var(--bg)'" ontouchend="this.style.background=''">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--dark);flex-shrink:0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+    <span style="font-size:14px;color:var(--dark);">도움말</span>
+  </div>
+  <div style="height:40px;"></div>
+</div>
+
+<div class="screen" id="s-my" style="display:none!important;">
+  <div class="sb"><span>9:41</span><div class="sb-center"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z"/></svg></div></div>
+  <div class="scroll">
+    <div class="my-profile">
+      <div class="my-avatar">차</div>
+      <div><div class="my-name">차민서 님</div><div class="my-sub">저장 124 · 회상 38회 / 이번 달</div></div>
+    </div>
+    <div class="my-section-lbl">MY</div>
+    <div class="my-item" onclick="toast('내 메모 전체')"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg><div class="my-item-label">내 메모</div><div class="my-item-badge">124</div><div class="my-item-arrow">›</div></div>
+    <div class="my-item" onclick="go('s-favorites')"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><div class="my-item-label">즐겨찾기</div><div class="my-item-badge">12</div><div class="my-item-arrow">›</div></div>
+    <div class="my-item" onclick="toast('오늘의 기억함')"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg><div class="my-item-label">오늘의 기억함</div><div class="my-item-arrow">›</div></div>
+    <div class="my-item" onclick="toast('주간 리포트')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><div class="my-item-label">주간 리포트</div><div class="my-item-arrow">›</div></div>
+    <div class="my-item" onclick="toast('자동 폐기 휴지통')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg><div class="my-item-label">휴지통</div><div style="font-size:11px;color:var(--muted);">7일 후 자동삭제</div><div class="my-item-arrow">›</div></div>
+    <div class="my-section-lbl">MORE</div>
+    <div class="my-item" onclick="toast('설정')"><svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg><div class="my-item-label">설정</div><div class="my-item-arrow">›</div></div>
+    <div class="my-item" onclick="toast('도움말')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg><div class="my-item-label">도움말</div><div class="my-item-arrow">›</div></div>
+    <div style="height:80px;"></div>
   </div>
   <div class="nav">
     <div class="ni" onclick="go('s-home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span></div>
     <div class="ni" onclick="go('s-recall')"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>기억찾기</span></div>
-    <div><button class="fab" onclick="showSheet()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
-    <div class="ni on"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>즐겨찾기</span></div>
-    <div class="ni"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></div>
+    <div><button style="width:52px;height:52px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,99,235,.4);cursor:pointer;" onclick="showSheet()"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button></div>
+    <div class="ni" onclick="go('s-favorites')"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>즐겨찾기</span></div>
+    <div class="ni on"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>마이</span></div>
   </div>
 </div>
 
-<!-- Bottom Sheet -->
+<!-- Quick Add Sheet -->
 <div class="sheet-ov" id="shov" onclick="hideSheet()">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sh-handle"></div>
-    <div class="sh-title">어떻게 저장할까요?</div>
+    <div class="sh-greeting">안녕하세요<br><strong>차민서</strong> 님</div>
+    <div class="sh-sub">어떻게 저장할까요?</div>
     <div class="sh-opts">
-      <div class="sopt" onclick="hideSheet();go('s-write')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>텍스트</div>
-      <div class="sopt" onclick="hideSheet();go('s-camera')"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/></svg>카메라</div>
-      <div class="sopt" onclick="hideSheet();go('s-voice')"><svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>보이스</div>
+      <div class="sopt" onclick="hideSheet();go('s-write')">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        원탭
+      </div>
+      <div class="sopt" onclick="hideSheet();nativeShare()">
+        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        공유
+      </div>
+      <div class="sopt" onclick="hideSheet();go('s-voice')">
+        <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+        보이스
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast-wrap" id="tw"><div class="toast-inner" id="ti"></div></div>
+<div class="toast" id="toastEl"></div>
 
+<!-- ══ SHARE SHEET ══ -->
+<div class="sheet-ov" id="share-sheet-ov" onclick="closeShare()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-handle"></div>
+    <div class="sh-title">공유하기</div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+
+      <!-- 카카오톡 -->
+      <div onclick="shareKakao()" style="display:flex;align-items:center;gap:16px;padding:16px;border-radius:16px;cursor:pointer;background:var(--bg);">
+        <div style="width:48px;height:48px;border-radius:14px;background:#FEE500;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:26px;height:26px;fill:#3C1E1E;"><path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.667 1.613 5.013 4.063 6.4L5 20.5l4.563-2.35C10.337 18.38 11.155 18.5 12 18.5c5.523 0 10-3.477 10-7.5S17.523 3 12 3z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);">카카오톡</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">카카오톡으로 전송</div>
+        </div>
+      </div>
+
+      <!-- 메일 -->
+      <div onclick="shareMail()" style="display:flex;align-items:center;gap:16px;padding:16px;border-radius:16px;cursor:pointer;">
+        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4285F4,#34A853);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:white;"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);">메일</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">이메일로 전송</div>
+        </div>
+      </div>
+
+      <!-- 링크 복사 -->
+      <div onclick="copyLink()" style="display:flex;align-items:center;gap:16px;padding:16px;border-radius:16px;cursor:pointer;">
+        <div style="width:48px;height:48px;border-radius:14px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--mid);"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--dark);">링크 복사</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">클립보드에 복사</div>
+        </div>
+      </div>
+
+    </div>
+    <div style="height:4px;"></div>
+    <button onclick="closeShare()" style="width:100%;height:50px;background:var(--bg);border:none;border-radius:14px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;margin-top:8px;">취소</button>
+  </div>
+</div>
+
+
+</div>
+</body>
+</html>
 <script>
-// ── Screen history stack ──
-let hist = [];
 
+
+// ── Navigation ──
+let hist = [];
 function go(id) {
   const cur = document.querySelector('.screen.active');
-  if (cur) { hist.push(cur.id); cur.classList.remove('active'); }
+  if (cur && cur.id !== id) hist.push(cur.id);
+  document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active','slide-in'); });
   const next = document.getElementById(id);
-  next.classList.remove('back');
-  next.classList.add('active');
+  next.classList.add('active','slide-in');
 }
-
 function back() {
   if (!hist.length) return;
   const prev = hist.pop();
-  const cur = document.querySelector('.screen.active');
-  if (cur) cur.classList.remove('active');
+  document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active','slide-in','slide-back'); });
   const target = document.getElementById(prev);
-  target.classList.add('back','active');
-  setTimeout(()=>target.classList.remove('back'), 300);
+  target.classList.add('active','slide-back');
 }
 
-// ── Task start ──
-function startTask(n) {
-  hist = [];
-  if (n === 1) go('s-home');
-  else go('s-recall');
+// ── Home memoboard ──
+function onHomeInput() {
+  const v = document.getElementById('home-ta').value;
+  const q = document.getElementById('memo-q');
+  const chips = document.getElementById('home-chips');
+  if (v.length > 0) {
+    q.classList.add('has-text');
+    q.style.display = 'none';
+    chips.classList.add('show');
+  } else {
+    q.style.display = '';
+    q.classList.remove('has-text');
+    chips.classList.remove('show');
+  }
+}
+function onHomeFocus() { document.getElementById('memo-q').style.display = 'none'; }
+function onHomeBlur() {
+  const v = document.getElementById('home-ta').value;
+  if (!v) document.getElementById('memo-q').style.display = '';
+}
+
+// ── Write ──
+function onWrite() {
+  const v = document.getElementById('wta').value;
+  const show = v.length > 3;
+  document.getElementById('wchips').classList.toggle('show', show);
+  document.getElementById('whint').classList.toggle('show', show);
+  document.getElementById('wsave').classList.toggle('show', show);
+}
+function onWFocus() {}
+function onWBlur() {}
+
+// ── Recall ──
+function onRecall(v) {
+  if (v.length > 3) {
+    document.getElementById('si').blur();
+    setTimeout(() => startCD(), 200);
+  }
+}
+function toggleClue(el) {
+  document.querySelectorAll('.clue').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
 }
 
 // ── Method select ──
 function selMethod(el, next) {
   document.querySelectorAll('.mc').forEach(c => c.classList.remove('sel'));
   el.classList.add('sel');
-  setTimeout(() => go(next), 180);
-}
-
-// ── Write ──
-function onWrite() {
-  const v = document.getElementById('wta').value;
-  const chips = document.getElementById('wchips');
-  const hint = document.getElementById('whint');
-  const btn = document.getElementById('save-btn');
-  if (v.length > 3) {
-    chips.style.display = 'flex';
-    hint.style.display = 'flex';
-    btn.style.display = 'block';
-  } else {
-    chips.style.display = 'none';
-    hint.style.display = 'none';
-    btn.style.display = 'none';
-  }
-}
-
-// ── Recall input ──
-function onRecall(v) {
-  if (v.length > 3) {
-    document.getElementById('ri').blur();
-    setTimeout(() => startCountdown(), 300);
-  }
-}
-
-// ── Clue filter ──
-function toggleClue(el) {
-  document.querySelectorAll('.clue').forEach(c => c.classList.remove('on'));
-  el.classList.add('on');
-}
-
-// ── 3-sec Countdown ──
-let cdT;
-function startCountdown() {
-  go('s-countdown');
-  const num = document.getElementById('cd-num');
-  const label = document.getElementById('cd-label');
-  const step = document.getElementById('cd-step');
-  const prog = document.getElementById('cd-prog');
-
-  // reset circle animation
-  prog.style.animation = 'none';
-  prog.offsetHeight;
-  prog.style.strokeDashoffset = 345;
-
-  let n = 3;
-  num.textContent = n;
-  label.textContent = '흐릿한 단서로 찾는 중…';
-  step.textContent = '📍 위치·시간 분석 중';
-
-  // animate circle
-  setTimeout(() => {
-    prog.style.transition = 'stroke-dashoffset 3s linear';
-    prog.style.strokeDashoffset = 0;
-  }, 50);
-
-  clearInterval(cdT);
-  cdT = setInterval(() => {
-    n--;
-    if (n === 2) step.textContent = '🤖 AI 유사도 계산 중';
-    if (n === 1) step.textContent = '⚡ 최적 결과 선별 중';
-    if (n <= 0) {
-      clearInterval(cdT);
-      // check voice or text
-      const ri = document.getElementById('ri');
-      if (ri && ri.value.length === 0) go('s-ai-recs'); // came from voice
-      else go('s-ai-recs');
-      return;
-    }
-    num.textContent = n;
-  }, 1000);
-}
-
-// ── AI card select ──
-function selAI(el) {
-  document.querySelectorAll('.ai-card').forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
+  setTimeout(() => go(next), 160);
 }
 
 // ── Sheet ──
 function showSheet() { document.getElementById('shov').classList.add('active'); }
 function hideSheet() { document.getElementById('shov').classList.remove('active'); }
 
-// ── Toast ──
-let toastT;
-function showToast(msg) {
-  const tw = document.getElementById('tw');
-  const ti = document.getElementById('ti');
-  ti.textContent = msg;
-  tw.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => tw.classList.remove('show'), 2200);
+// ── Success overlay ──
+function showSuccess() {
+  document.getElementById('success-ov').classList.add('active');
+}
+function closeSuccess() {
+  document.getElementById('success-ov').classList.remove('active');
 }
 
-// ── Drag & Drop (favorites) ──
+// ── 3-sec Countdown ──
+let cdTimer;
+function startCD() {
+  go('s-countdown');
+  const num = document.getElementById('cdn');
+  const lbl = document.getElementById('cd-lbl');
+  const stp = document.getElementById('cds');
+  const prog = document.getElementById('cdp');
+  let n = 3, elapsed = 0;
+  num.textContent = n;
+  lbl.textContent = '흐릿한 단서로 찾는 중…';
+  stp.textContent = '📍 위치·시간 분석 중';
+  prog.style.strokeDashoffset = 340;
+  clearInterval(cdTimer);
+  cdTimer = setInterval(() => {
+    elapsed += 100;
+    const pct = elapsed / 3000;
+    prog.style.strokeDashoffset = 340 - (340 * pct);
+    if (elapsed % 1000 === 0) {
+      n--;
+      if (n === 2) stp.textContent = '🤖 AI 유사도 계산 중';
+      if (n === 1) stp.textContent = '⚡ 최적 결과 선별 중';
+      if (n <= 0) {
+        clearInterval(cdTimer);
+        go('s-result');
+        return;
+      }
+      num.textContent = n;
+    }
+  }, 100);
+}
+
+// ── Toast ──
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+
+// ── Just Saved Banner ──
+function showJustSaved() {
+  const wta = document.getElementById('wta');
+  const homeTa = document.getElementById('home-ta');
+  const text = (wta && wta.value) || (homeTa && homeTa.value) || '내일 회의 끝나고 김대리한테 발표 자료 공유하기';
+  document.getElementById('just-saved-text').textContent = text || '보이스 메모가 저장됐어요';
+  const chipsEl = document.getElementById('just-saved-chips');
+  chipsEl.innerHTML = `
+    <span style="background:var(--blue-l);color:var(--blue);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;">📍 성수동</span>
+    <span style="background:var(--yellow-l);color:var(--yellow);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;">🕐 오후 3:24</span>
+  `;
+  const banner = document.getElementById('just-saved-banner');
+  banner.style.display = 'block';
+  banner.style.animation = 'chipIn .3s ease';
+}
+
+// ── Share Sheet ──
+function nativeShare() {
+  document.getElementById('share-sheet-ov').classList.add('active');
+}
+function closeShare() {
+  document.getElementById('share-sheet-ov').classList.remove('active');
+}
+function shareKakao() {
+  closeShare();
+  toast('카카오톡으로 공유됐어요');
+}
+function shareMail() {
+  closeShare();
+  toast('메일로 공유됐어요');
+}
+function copyLink() {
+  closeShare();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      toast('링크가 복사됐어요!');
+    });
+  } else {
+    toast('링크가 복사됐어요!');
+  }
+}
+
+// ── Drawer ──
+function openDrawer() {
+  const ov = document.getElementById('drawer-overlay');
+  const panel = document.getElementById('drawer-panel');
+  ov.style.display = 'block';
+  // force reflow then animate
+  panel.getBoundingClientRect();
+  panel.style.right = '0';
+}
+function closeDrawer() {
+  const panel = document.getElementById('drawer-panel');
+  const ov = document.getElementById('drawer-overlay');
+  panel.style.right = '-320px';
+  setTimeout(() => { ov.style.display = 'none'; }, 280);
+}
+
+// ── Drag & Drop ──
 let dragSrc = null;
 function ds(e) { dragSrc = e.currentTarget; dragSrc.style.opacity = '.4'; }
-function de(e) { dragSrc && (dragSrc.style.opacity = '1'); dragSrc = null; }
+function de(e) { if(dragSrc) dragSrc.style.opacity='1'; dragSrc=null; }
 function dov(e) { e.preventDefault(); }
-function drop(e) {
+function drp(e) {
   e.preventDefault();
   if (!dragSrc || dragSrc === e.currentTarget) return;
   const list = document.getElementById('fav-list');
@@ -1215,7 +1562,7 @@ function drop(e) {
   if (si < ti) list.insertBefore(dragSrc, e.currentTarget.nextSibling);
   else list.insertBefore(dragSrc, e.currentTarget);
   dragSrc.style.opacity = '1';
-  showToast('순서가 변경됐어요!');
+  toast('순서가 변경됐어요!');
 }
 
 // Voice timer
@@ -1225,6 +1572,8 @@ setInterval(() => {
   const el = document.getElementById('vt');
   if (el) el.textContent = '0:' + (vts < 10 ? '0' + vts : vts);
 }, 1000);
+
+
 </script>
 </div>
 </body>
