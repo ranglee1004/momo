@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -23,10 +24,10 @@ input,textarea{font-family:inherit}
 .sb-icons{display:flex;align-items:center;gap:5px}
 
 /* TOP BAR */
-.topbar{display:flex;align-items:center;height:52px;padding:0 10px 0 14px;flex-shrink:0}
+.topbar{display:flex;align-items:center;height:52px;padding:0 10px 0 14px;flex-shrink:0;justify-content:space-between}
 .topbar.dark{background:#1a2025}
-.tb-l{min-width:60px;display:flex;align-items:center}
-.tb-r{min-width:60px;display:flex;align-items:center;justify-content:flex-end}
+.tb-l{display:flex;align-items:center}
+.tb-r{display:flex;align-items:center;justify-content:flex-end;gap:2px}
 .tb-title{flex:1;text-align:center;font-size:16px;font-weight:700;letter-spacing:-.02em}
 .ibtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .ibtn:active{background:rgba(0,0,0,.06)}
@@ -223,9 +224,9 @@ input,textarea{font-family:inherit}
 .drawer-layer.open{pointer-events:auto}
 .drawer-scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .28s;backdrop-filter:blur(2px)}
 .drawer-layer.open .drawer-scrim{opacity:1}
-.drawer-panel{position:absolute;top:0;left:0;bottom:0;width:80%;max-width:300px;background:#fff;padding:54px 0 20px;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .3s cubic-bezier(.32,.72,.32,1);box-shadow:4px 0 30px rgba(0,0,0,.12);border-radius:0 28px 28px 0}
+.drawer-panel{position:absolute;top:0;right:0;bottom:0;width:80%;max-width:300px;background:#fff;padding:54px 0 20px;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,.32,1);box-shadow:-4px 0 30px rgba(0,0,0,.12);border-radius:28px 0 0 28px}
 .drawer-layer.open .drawer-panel{transform:translateX(0)}
-.drawer-close{position:absolute;top:56px;right:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--s)}
+.drawer-close{position:absolute;top:16px;right:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--s)}
 .drawer-profile{display:flex;align-items:center;gap:12px;padding:14px 20px 18px;border-bottom:1px solid var(--b);margin-bottom:8px}
 .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pd));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
 .dp-name{font-size:15px;font-weight:700;margin-bottom:2px}
