@@ -45,7 +45,7 @@ input,textarea{font-family:inherit}
 /* HOME */
 .logo-tiny{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700}
 .logo-tiny b{color:var(--p)}
-.board-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:0 20px}
+.board-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:0 20px;padding-bottom:80px}
 .board-ph{text-align:center;font-size:28px;font-weight:800;letter-spacing:-.04em;line-height:1.22;margin-bottom:14px}
 .board-cursor{display:inline-block;width:2.5px;height:1.1em;background:var(--p);border-radius:2px;margin-left:2px;vertical-align:text-bottom;animation:blink 1.1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
@@ -60,7 +60,7 @@ input,textarea{font-family:inherit}
 .rpill-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ACTION BAR */
-.action-bar{height:80px;display:flex;align-items:center;justify-content:space-around;padding:0 40px 10px;border-top:1px solid var(--b);background:#fff;flex-shrink:0}
+.action-bar{height:80px;display:flex;align-items:center;justify-content:space-around;padding:0 40px 10px;border-top:1px solid var(--b);background:#fff;flex-shrink:0;position:fixed;bottom:0;left:0;right:0;z-index:200}
 .abtn{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--s)}
 .abtn:active{transform:scale(.94)}
 .abtn.main{background:linear-gradient(140deg,var(--p),var(--pd));box-shadow:0 8px 20px rgba(55,138,221,.4);width:60px;height:60px}
@@ -176,7 +176,7 @@ input,textarea{font-family:inherit}
 .match-badge.top{background:var(--pl);color:var(--pd)}
 
 /* DETAIL */
-.detail-scroll{overflow-y:auto}
+.detail-scroll{flex:1;overflow-y:auto;padding-bottom:80px}
 .detail-hero{width:100%;height:200px;overflow:hidden;position:relative;background:linear-gradient(135deg,#2a3340,#44515f);display:flex;align-items:center;justify-content:center}
 .detail-hero img{width:100%;height:100%;object-fit:cover}
 .detail-pad{padding:18px 20px 20px}
@@ -433,8 +433,7 @@ function render(){
 
 function statusBar(dark=false){
   const col=dark?'#fff':'var(--t1)';
-  return `<div class="sb"><span class="sb-time" style="color:${col}">9:41</span>
-  <span class="sb-icons">${icon('search',16,col,1.5)}${icon('mic',16,col,1.5)}</span></div>`;
+  return `<div class="sb"><span class="sb-time" style="color:${col}">9:41</span></div>`;
 }
 
 function thumbHTML(m,size=40,radius=12){
@@ -620,7 +619,7 @@ function buildDetail(){
   if(!m) return `<div class="screen surface active"><div style="padding:40px;text-align:center;color:var(--t3)">메모를 찾을 수 없어요</div></div>`;
   const related=activeMemos().filter(x=>x.id!==m.id&&(x.place===m.place||Math.abs((x.sortTime||0)-(m.sortTime||0))<=1)).slice(0,3);
   const typeLabel={photo:'사진',text:'메모',link:'공유 링크',voice:'음성'}[m.type]||'메모';
-  return `<div class="screen surface detail-scroll active" id="screen-detail">
+  return `<div class="screen surface active" id="screen-detail" style="display:flex;flex-direction:column;"><div class="detail-scroll" style="flex:1;overflow-y:auto;padding-bottom:80px">
   ${statusBar()}
   <div class="topbar">
     <div class="tb-l"><button class="ibtn" onclick="goBack()">${icon('chevronLeft',20)}</button></div>
@@ -666,6 +665,7 @@ function buildDetail(){
       </div>
     </div>`:''}
   </div>
+</div>
   <div class="detail-actions">
     <button class="da-btn" onclick="toggleFav('${m.id}')">
       ${m.favorite?icon('bookmark',19,'var(--a)','fill'):icon('bookmark',19,'var(--t2)',2)}
